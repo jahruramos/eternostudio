@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import CustomCursor from "@/components/CustomCursor";
 import "./globals.css";
 
 const ppNeueMontreal = localFont({
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ppNeueMontreal.variable} h-full`}>
       <body className="min-h-full bg-negro font-sans text-cream antialiased">
+        <CustomCursor />
         {children}
       </body>
     </html>

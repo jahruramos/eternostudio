@@ -87,7 +87,7 @@ export default function Home() {
               href={s.href}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1 uppercase transition-opacity hover:opacity-60"
+              className="flex items-center gap-1 uppercase relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-cream after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
             >
               {s.label}
               {/* eslint-disable-next-line @next/next/no-img-element */}
