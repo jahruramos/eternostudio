@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+:root {
+  --negro: #141414;
+  --cream: #fffdf1;
+}
+
+@theme inline {
+  --color-negro: var(--negro);
+  --color-cream: var(--cream);
+  --font-sans: var(--font-pp-neue), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--negro);
+  color: var(--cream);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee-scroll 64s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+@keyframes logo-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(50vh - 50%)) scale(0.85);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(calc(50vh - 50%)) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-logo {
+  opacity: 0;
+  animation: logo-enter 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-logo,
+  .animate-fade-up,
+  .animate-fade-in {
+    animation: none;
+    opacity: 1;
+  }
+}
