@@ -15,6 +15,7 @@ body {
   background: var(--negro);
   color: var(--cream);
   cursor: none;
+  scroll-behavior: smooth;
 }
 
 a, button, [role="button"] {

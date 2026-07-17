@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import GallerySection from "@/components/GallerySection";
 
 const PAD = "clamp(20px, 6.25vw, 120px)";
+
+export const metadata: Metadata = {
+  title: "Vitalis — Eterno Studio™",
+  description: "Branding, identidad visual, packaging y naming para Vitalis — suplementos de energía y bienestar.",
+};
 
 const project = {
   overview: [
@@ -19,14 +26,14 @@ const project = {
 
 export default function VitalisProject() {
   return (
-    <div className="flex min-h-screen flex-col overflow-clip">
+    <div className="flex min-h-screen flex-col overflow-clip lg:h-screen lg:overflow-hidden">
       <Navbar pad={PAD} />
 
       <main
-        className="animate-fade-up flex-1 pt-[clamp(60px,9vw,150px)]"
+        className="animate-fade-up flex-1 overflow-hidden pt-[clamp(28px,5vh,60px)]"
         style={{ paddingInline: PAD, animationDelay: "0.5s" }}
       >
-        <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,490px)_1fr]">
+        <div className="grid gap-x-16 gap-y-12 lg:h-full lg:grid-cols-[1fr_minmax(0,1000px)]">
           {/* Info column */}
           <div className="flex flex-col gap-16">
             <div>
@@ -60,17 +67,7 @@ export default function VitalisProject() {
           </div>
 
           {/* Gallery column */}
-          <div className="flex flex-col gap-[18px]">
-            {project.images.map((image) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={image.src}
-                src={image.src}
-                alt={image.alt}
-                className="aspect-video w-full rounded-[3px] object-cover"
-              />
-            ))}
-          </div>
+          <GallerySection images={project.images} />
         </div>
       </main>
 
