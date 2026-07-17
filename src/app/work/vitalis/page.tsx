@@ -26,14 +26,14 @@ const project = {
 
 export default function VitalisProject() {
   return (
-    <div className="flex min-h-screen flex-col overflow-clip lg:h-screen lg:overflow-hidden">
+    <div className="flex min-h-screen flex-col overflow-clip">
       <Navbar pad={PAD} />
 
       <main
-        className="animate-fade-up flex-1 overflow-hidden pt-[clamp(28px,5vh,60px)]"
+        className="animate-fade-up flex-1 pt-[clamp(60px,9vw,150px)]"
         style={{ paddingInline: PAD, animationDelay: "0.5s" }}
       >
-        <div className="grid gap-x-16 gap-y-12 lg:h-full lg:grid-cols-[1fr_minmax(0,1000px)]">
+        <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[1fr_minmax(0,1000px)]">
           {/* Info column */}
           <div className="flex flex-col gap-16">
             <div>
