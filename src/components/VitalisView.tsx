@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import GallerySection from "@/components/GallerySection";
 
@@ -22,42 +22,21 @@ type Project = {
 };
 
 export default function VitalisView({ project }: { project: Project }) {
-  const galleryRef = useRef<HTMLDivElement>(null);
   const [headerHidden, setHeaderHidden] = useState(false);
 
-  // Desktop only: a single wheel input, wherever the cursor is, drives the
-  // gallery first. Only once the gallery has nowhere left to go in that
-  // direction does the event fall through to the page's own (tiny) native
-  // scroll, which is just enough to reveal the footer below.
   useEffect(() => {
-    const mql = window.matchMedia("(min-width: 1024px)");
+    let prevY = window.scrollY;
 
-    const onWheel = (e: WheelEvent) => {
-      if (!mql.matches) return;
-      const gallery = galleryRef.current;
-      if (!gallery) return;
-
-      const scrollingDown = e.deltaY > 0;
-      const scrollingUp = e.deltaY < 0;
-      if (scrollingDown) setHeaderHidden(true);
-      else if (scrollingUp) setHeaderHidden(false);
-
-      const atGalleryBottom = gallery.scrollTop >= gallery.scrollHeight - gallery.clientHeight - 1;
-      const atGalleryTop = gallery.scrollTop <= 0;
-      const pageScrolled = window.scrollY > 0;
-
-      if (scrollingDown && !atGalleryBottom) {
-        gallery.scrollBy({ top: e.deltaY, behavior: "auto" });
-        e.preventDefault();
-      } else if (scrollingUp && !pageScrolled && !atGalleryTop) {
-        gallery.scrollBy({ top: e.deltaY, behavior: "auto" });
-        e.preventDefault();
-      }
-      // else: let the native page scroll handle it (reveal/hide the footer).
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - prevY;
+      prevY = y;
+      if (delta > 2) setHeaderHidden(true);
+      else if (delta < -2) setHeaderHidden(false);
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    return () => window.removeEventListener("wheel", onWheel);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -65,12 +44,15 @@ export default function VitalisView({ project }: { project: Project }) {
       <Navbar pad={PAD} fixed hidden={headerHidden} />
 
       <main
-        className="animate-fade-up flex-1 pt-[clamp(60px,9vw,150px)] lg:h-screen lg:grow-0 lg:basis-auto lg:overflow-hidden lg:pt-[clamp(110px,14vw,220px)]"
-        style={{ paddingInline: PAD, animationDelay: "0.5s" }}
+        className="flex-1"
+        style={{ paddingInline: PAD }}
       >
-        <div className="grid gap-x-16 gap-y-12 lg:h-full lg:min-h-0 lg:grid-cols-[1fr_minmax(0,1000px)]">
+        <div
+          className="animate-fade-up grid gap-x-16 gap-y-12 pt-[clamp(60px,9vw,150px)] lg:grid-cols-[1fr_minmax(0,1000px)] lg:pt-[clamp(110px,14vw,220px)]"
+          style={{ animationDelay: "0.5s" }}
+        >
           {/* Info column */}
-          <div className="flex flex-col gap-16 lg:h-full lg:min-h-0 lg:overflow-hidden">
+          <div className="flex flex-col gap-16 bg-negro lg:sticky lg:top-[clamp(110px,14vw,220px)] lg:self-start lg:z-10">
             <div>
               <p className="text-[16px] tracking-[0.5px] text-[#666]">Overview</p>
               <div className="mt-4 flex max-w-[490px] flex-col gap-4 text-[16px] leading-[18px] tracking-[0.5px]">
@@ -102,7 +84,7 @@ export default function VitalisView({ project }: { project: Project }) {
           </div>
 
           {/* Gallery column */}
-          <GallerySection ref={galleryRef} images={project.images} />
+          <GallerySection images={project.images} />
         </div>
       </main>
 

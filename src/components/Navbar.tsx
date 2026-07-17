@@ -22,7 +22,7 @@ export default function Navbar({
 
   return (
     <header
-      className={`animate-fade-in z-50 flex items-center justify-between gap-4 pt-[clamp(28px,5vh,60px)] transition-transform duration-300 ${
+      className={`animate-fade-in z-50 flex items-center justify-between gap-4 py-[clamp(28px,5vh,60px)] transition-transform duration-300 ${
         fixed ? "relative lg:fixed lg:inset-x-0 lg:top-0 lg:bg-negro" : "relative"
       } ${hidden ? "lg:-translate-y-full" : "lg:translate-y-0"}`}
       style={{ paddingInline: pad, animationDelay: "0.3s" }}
