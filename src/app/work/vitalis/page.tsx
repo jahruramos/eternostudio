@@ -21,6 +21,8 @@ const project = {
     { src: "/projects/vitalis/vitalis-03.jpg", alt: "Vitalis business card and Shilajit Gummies packaging" },
     { src: "/projects/vitalis/vitalis-04.jpg", alt: "Vitalis Instagram story ads and logo construction grid" },
     { src: "/projects/vitalis/vitalis-05.jpg", alt: "Vitalis print poster series and lifestyle photography" },
+    { src: "/projects/vitalis/vitalis-06.jpg", alt: "Vitalis brand application and visual identity system" },
+    { src: "/projects/vitalis/vitalis-07.jpg", alt: "Vitalis product packaging and brand collateral" },
   ],
 };
 
