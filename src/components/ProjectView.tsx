@@ -21,7 +21,7 @@ type Project = {
   images: { src: string; alt: string }[];
 };
 
-export default function VitalisView({ project }: { project: Project }) {
+export default function ProjectView({ project }: { project: Project }) {
   const [headerHidden, setHeaderHidden] = useState(false);
 
   useEffect(() => {

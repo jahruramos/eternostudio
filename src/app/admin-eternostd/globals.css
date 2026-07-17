@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  --negro: #141414;
+  --cream: #fffdf1;
+}
+
+@theme inline {
+  --color-negro: var(--negro);
+  --color-cream: var(--cream);
+  --font-sans: var(--font-pp-neue), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--negro);
+  color: var(--cream);
+  cursor: auto;
+  scroll-behavior: smooth;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}

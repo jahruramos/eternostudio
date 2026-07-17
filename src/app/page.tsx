@@ -1,14 +1,10 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { db } from "@/lib/db";
+import { projects } from "@/lib/schema";
+import { eq, asc } from "drizzle-orm";
 
-const thumbs = [
-  { src: "/images/thumb-portafolio.png", alt: "Portafolio branding" },
-  { src: "/images/thumb-vitalis.png", alt: "Vitalis supplement branding", href: "/work/vitalis" },
-  { src: "/images/thumb-missmas.png", alt: "MISSMAS packaging" },
-  { src: "/images/thumb-paperbag.png", alt: "Auria paper bag" },
-  { src: "/images/thumb-bendito.png", alt: "Bendito poster" },
-  { src: "/images/thumb-handtag.png", alt: "Hilltop hang tag" },
-];
+export const dynamic = "force-dynamic";
 
 const socials = [
   { label: "Instagram", href: "https://instagram.com" },
@@ -18,7 +14,24 @@ const socials = [
 
 const PAD = "clamp(20px, 6.25vw, 120px)";
 
+function getThumbs() {
+  const publishedProjects = db
+    .select()
+    .from(projects)
+    .where(eq(projects.status, "published"))
+    .orderBy(asc(projects.sortOrder))
+    .all();
+
+  return publishedProjects.map((project) => ({
+    src: project.thumbnail || "/images/thumb-vitalis.png",
+    alt: `${project.title} branding`,
+    href: `/work/${project.slug}`,
+  }));
+}
+
 export default function Home() {
+  const thumbs = getThumbs();
+
   return (
     <div className="flex min-h-screen flex-col overflow-clip">
       {/* Nav */}
@@ -64,24 +77,11 @@ export default function Home() {
             const imgClass =
               "mr-[15px] h-[clamp(200px,23vw,300px)] w-[clamp(166.67px,19.17vw,250px)] shrink-0 rounded-[3px] object-cover transition-[width] duration-500 ease-out hover:w-[clamp(280px,32.2vw,420px)]";
 
-            if (thumb.href) {
-              return (
-                <Link key={i} href={thumb.href} aria-hidden={i >= thumbs.length} tabIndex={i >= thumbs.length ? -1 : undefined}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={thumb.src} alt={thumb.alt} className={imgClass} />
-                </Link>
-              );
-            }
-
             return (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={i}
-                src={thumb.src}
-                alt={thumb.alt}
-                aria-hidden={i >= thumbs.length}
-                className={imgClass}
-              />
+              <Link key={i} href={thumb.href} aria-hidden={i >= thumbs.length} tabIndex={i >= thumbs.length ? -1 : undefined}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={thumb.src} alt={thumb.alt} className={imgClass} />
+              </Link>
             );
           })}
         </div>
