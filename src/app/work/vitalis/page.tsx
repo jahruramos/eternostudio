@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import GallerySection from "@/components/GallerySection";
-
-const PAD = "clamp(20px, 6.25vw, 120px)";
+import VitalisView from "@/components/VitalisView";
 
 export const metadata: Metadata = {
   title: "Vitalis — Eterno Studio™",
@@ -19,57 +16,14 @@ const project = {
   duration: "1 month",
   services: "Branding, Identidad Visual, Packaging, Naming.",
   images: [
-    { src: "/images/vitalis-1.jpg", alt: "Vitalis poster display in a concrete gallery space" },
-    { src: "/images/vitalis-2.jpg", alt: "Vitalis outdoor billboard display" },
+    { src: "/projects/vitalis/vitalis-01.jpg", alt: "Vitalis brand color palette and Pantone specifications" },
+    { src: "/projects/vitalis/vitalis-02.jpg", alt: "Vitalis wordmark with margins and safe area guidelines" },
+    { src: "/projects/vitalis/vitalis-03.jpg", alt: "Vitalis business card and Shilajit Gummies packaging" },
+    { src: "/projects/vitalis/vitalis-04.jpg", alt: "Vitalis Instagram story ads and logo construction grid" },
+    { src: "/projects/vitalis/vitalis-05.jpg", alt: "Vitalis print poster series and lifestyle photography" },
   ],
 };
 
 export default function VitalisProject() {
-  return (
-    <div className="flex h-screen flex-col overflow-hidden">
-      <Navbar pad={PAD} />
-
-      <main
-        className="animate-fade-up flex-1 overflow-hidden pt-[clamp(60px,9vw,150px)]"
-        style={{ paddingInline: PAD, animationDelay: "0.5s" }}
-      >
-        <div className="grid h-full gap-x-16 gap-y-12 lg:grid-cols-[1fr_minmax(0,1000px)]">
-          {/* Info column */}
-          <div className="flex flex-col gap-16">
-            <div>
-              <p className="text-[16px] tracking-[0.5px] text-[#666]">Overview</p>
-              <div className="mt-4 flex max-w-[490px] flex-col gap-4 text-[16px] leading-[18px] tracking-[0.5px]">
-                {project.overview.map((paragraph) => (
-                  <p key={paragraph.slice(0, 20)}>{paragraph}</p>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-6">
-              <div>
-                <p className="text-[16px] tracking-[0.5px] text-[#666]">Cliente</p>
-                <p className="mt-4 text-[16px] tracking-[1px]">{project.client}</p>
-              </div>
-              <div>
-                <p className="text-[16px] tracking-[0.5px] text-[#666]">Location:</p>
-                <p className="mt-4 text-[16px] tracking-[1px]">{project.location}</p>
-              </div>
-              <div>
-                <p className="text-[16px] tracking-[0.5px] text-[#666]">Duration:</p>
-                <p className="mt-4 text-[16px] tracking-[1px]">{project.duration}</p>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-[16px] tracking-[0.5px] text-[#666]">Services:</p>
-              <p className="mt-4 max-w-[150px] text-[16px] tracking-[1px]">{project.services}</p>
-            </div>
-          </div>
-
-          {/* Gallery column */}
-          <GallerySection images={project.images} />
-        </div>
-      </main>
-    </div>
-  );
+  return <VitalisView project={project} />;
 }
