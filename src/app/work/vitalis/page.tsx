@@ -26,14 +26,14 @@ const project = {
 
 export default function VitalisProject() {
   return (
-    <div className="flex min-h-screen flex-col overflow-clip">
+    <div className="flex h-screen flex-col overflow-hidden">
       <Navbar pad={PAD} />
 
       <main
-        className="animate-fade-up flex-1 pt-[clamp(60px,9vw,150px)]"
+        className="animate-fade-up flex-1 overflow-hidden pt-[clamp(60px,9vw,150px)]"
         style={{ paddingInline: PAD, animationDelay: "0.5s" }}
       >
-        <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[1fr_minmax(0,1000px)]">
+        <div className="grid h-full gap-x-16 gap-y-12 lg:grid-cols-[1fr_minmax(0,1000px)]">
           {/* Info column */}
           <div className="flex flex-col gap-16">
             <div>
@@ -70,15 +70,6 @@ export default function VitalisProject() {
           <GallerySection images={project.images} />
         </div>
       </main>
-
-      <footer
-        className="animate-fade-up pb-[clamp(24px,5vh,56px)] pt-[clamp(28px,5vh,60px)] text-[12px]"
-        style={{ paddingInline: PAD, animationDelay: "0.8s" }}
-      >
-        <p className="tracking-[0.42px]">
-          ETERNO STUDIO©2026&nbsp;&nbsp;Creative Studio &amp; Strategic Design
-        </p>
-      </footer>
     </div>
   );
 }

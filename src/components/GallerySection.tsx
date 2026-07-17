@@ -3,56 +3,33 @@
 import { useEffect, useRef } from "react";
 
 export default function GallerySection({ images }: { images: { src: string; alt: string }[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const lastImageRef = useRef<HTMLImageElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-  // Scroll-snap only guarantees a start-aligned stop when the scrollable
-  // range reaches it. Once the container is taller than the last image,
-  // the browser's natural scroll end (content bottom flush with container
-  // bottom) falls short of that point, leaving a sliver of the previous
-  // image visible. Padding the bottom by the shortfall makes the last
-  // snap point reachable so the scroll always ends exactly there.
   useEffect(() => {
-    const container = containerRef.current;
-    const lastImage = lastImageRef.current;
-    if (!container || !lastImage) return;
+    const el = ref.current;
+    if (!el) return;
 
-    const mql = window.matchMedia("(min-width: 1024px)");
-
-    const updatePadding = () => {
-      container.style.paddingBottom = "";
-      if (!mql.matches) return;
-      // Already fits without scrolling -> leave as is.
-      if (container.scrollHeight <= container.clientHeight) return;
-      const extra = Math.max(0, container.clientHeight - lastImage.clientHeight);
-      container.style.paddingBottom = `${extra}px`;
+    const onWheel = (e: WheelEvent) => {
+      el.scrollBy({ top: e.deltaY, behavior: "auto" });
     };
 
-    updatePadding();
-    const ro = new ResizeObserver(updatePadding);
-    ro.observe(container);
-    ro.observe(lastImage);
-    mql.addEventListener("change", updatePadding);
-    return () => {
-      ro.disconnect();
-      mql.removeEventListener("change", updatePadding);
-    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => window.removeEventListener("wheel", onWheel);
   }, []);
 
   return (
     <div
-      ref={containerRef}
-      className="scrollbar-hide flex flex-col gap-[18px] lg:sticky lg:top-0 lg:max-h-screen lg:snap-y lg:snap-mandatory lg:overflow-y-auto lg:overscroll-contain"
+      ref={ref}
+      className="scrollbar-hide flex flex-col gap-[18px] overflow-y-auto snap-y snap-mandatory"
     >
-      {images.map((image, i) => (
+      {images.map((image) => (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           key={image.src}
-          ref={i === images.length - 1 ? lastImageRef : undefined}
           src={image.src}
           alt={image.alt}
           loading="lazy"
-          className="aspect-video w-full shrink-0 rounded-[3px] object-cover lg:snap-start"
+          className="aspect-video w-full snap-start rounded-[3px] object-cover"
         />
       ))}
     </div>
