@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import MarqueeStrip from "@/components/MarqueeStrip";
 import { db } from "@/lib/db";
 import { projects } from "@/lib/schema";
 import { eq, asc } from "drizzle-orm";
@@ -7,7 +7,7 @@ import { eq, asc } from "drizzle-orm";
 export const dynamic = "force-dynamic";
 
 const socials = [
-  { label: "Instagram", href: "https://instagram.com" },
+  { label: "Instagram", href: "https://www.instagram.com/eterno.std/" },
   { label: "LinkedIn", href: "https://linkedin.com" },
   { label: "TikTok", href: "https://tiktok.com" },
 ];
@@ -68,24 +68,8 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Thumbnail strip — full-bleed infinite marquee, hover grows the card */}
-      <section className="animate-fade-up marquee-viewport w-full overflow-hidden pt-[130px]" style={{ animationDelay: "0.8s" }}>
-        <div className="marquee-track flex w-max">
-          {/* 4 copies: the loop wraps at -50% (= 2 copies), which always exceeds
-              the viewport, so no empty gap appears at the seam on wide screens */}
-          {[...thumbs, ...thumbs, ...thumbs, ...thumbs].map((thumb, i) => {
-            const imgClass =
-              "mr-[15px] h-[clamp(200px,23vw,300px)] w-[clamp(166.67px,19.17vw,250px)] shrink-0 rounded-[3px] object-cover transition-[width] duration-500 ease-out hover:w-[clamp(280px,32.2vw,420px)]";
-
-            return (
-              <Link key={i} href={thumb.href} aria-hidden={i >= thumbs.length} tabIndex={i >= thumbs.length ? -1 : undefined}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={thumb.src} alt={thumb.alt} className={imgClass} />
-              </Link>
-            );
-          })}
-        </div>
-      </section>
+      {/* Thumbnail strip — auto-scroll + manual scroll on hover */}
+      <MarqueeStrip thumbs={thumbs} />
 
       {/* Footer */}
       <footer

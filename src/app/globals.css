@@ -58,21 +58,6 @@ a, button, [role="button"] {
   -ms-overflow-style: none;
 }
 
-@keyframes marquee-scroll {
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee-track {
-  animation: marquee-scroll 90s linear infinite;
-  will-change: transform;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
 @keyframes logo-enter {
   0% {
     opacity: 0;

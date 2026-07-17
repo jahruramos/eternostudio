@@ -7,7 +7,7 @@ import GallerySection from "@/components/GallerySection";
 const PAD = "clamp(20px, 6.25vw, 120px)";
 
 const socials = [
-  { label: "Instagram", href: "https://instagram.com" },
+  { label: "Instagram", href: "https://www.instagram.com/eterno.std/" },
   { label: "LinkedIn", href: "https://linkedin.com" },
   { label: "TikTok", href: "https://tiktok.com" },
 ];
