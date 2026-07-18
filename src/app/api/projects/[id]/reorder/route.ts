@@ -8,7 +8,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await params; // ensure params are resolved
+    await params;
     const body = await request.json();
     const { order } = body;
 
@@ -19,12 +19,11 @@ export async function PUT(
       );
     }
 
-    // Update sort order for each image
     for (let i = 0; i < order.length; i++) {
-      db.update(projectImages)
+      await db
+        .update(projectImages)
         .set({ sortOrder: i })
-        .where(eq(projectImages.id, order[i]))
-        .run();
+        .where(eq(projectImages.id, order[i]));
     }
 
     return NextResponse.json({ success: true });

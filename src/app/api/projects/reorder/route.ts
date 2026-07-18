@@ -15,12 +15,11 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Update sort order for each project
     for (let i = 0; i < order.length; i++) {
-      db.update(projects)
+      await db
+        .update(projects)
         .set({ sortOrder: i, updatedAt: new Date().toISOString() })
-        .where(eq(projects.id, order[i]))
-        .run();
+        .where(eq(projects.id, order[i]));
     }
 
     return NextResponse.json({ success: true });

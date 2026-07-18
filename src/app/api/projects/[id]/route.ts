@@ -11,11 +11,11 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const project = db
+    const rows = await db
       .select()
       .from(projects)
-      .where(eq(projects.id, parseInt(id)))
-      .get();
+      .where(eq(projects.id, parseInt(id)));
+    const project = rows[0];
 
     if (!project) {
       return NextResponse.json(
@@ -24,11 +24,10 @@ export async function GET(
       );
     }
 
-    const images = db
+    const images = await db
       .select()
       .from(projectImages)
-      .where(eq(projectImages.projectId, project.id))
-      .all();
+      .where(eq(projectImages.projectId, project.id));
 
     return NextResponse.json({ ...project, images });
   } catch (error) {
@@ -49,11 +48,11 @@ export async function PUT(
     const body = await request.json();
     const { title, slug, client, location, duration, services, overview, thumbnail, status } = body;
 
-    const existingProject = db
+    const existingRows = await db
       .select()
       .from(projects)
-      .where(eq(projects.id, parseInt(id)))
-      .get();
+      .where(eq(projects.id, parseInt(id)));
+    const existingProject = existingRows[0];
 
     if (!existingProject) {
       return NextResponse.json(
@@ -62,7 +61,7 @@ export async function PUT(
       );
     }
 
-    const updatedProject = db
+    const updatedRows = await db
       .update(projects)
       .set({
         title,
@@ -77,10 +76,9 @@ export async function PUT(
         updatedAt: new Date().toISOString(),
       })
       .where(eq(projects.id, parseInt(id)))
-      .returning()
-      .get();
+      .returning();
 
-    return NextResponse.json(updatedProject);
+    return NextResponse.json(updatedRows[0]);
   } catch (error) {
     console.error("Error updating project:", error);
     return NextResponse.json(
@@ -96,11 +94,11 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const project = db
+    const rows = await db
       .select()
       .from(projects)
-      .where(eq(projects.id, parseInt(id)))
-      .get();
+      .where(eq(projects.id, parseInt(id)));
+    const project = rows[0];
 
     if (!project) {
       return NextResponse.json(
@@ -109,14 +107,11 @@ export async function DELETE(
       );
     }
 
-    // Get all images for this project
-    const images = db
+    const images = await db
       .select()
       .from(projectImages)
-      .where(eq(projectImages.projectId, project.id))
-      .all();
+      .where(eq(projectImages.projectId, project.id));
 
-    // Delete image files from disk
     for (const image of images) {
       try {
         const imagePath = path.join(process.cwd(), "public", image.src);
@@ -126,7 +121,6 @@ export async function DELETE(
       }
     }
 
-    // Delete project directory if it exists
     try {
       const projectDir = path.join(process.cwd(), "public", "projects", project.slug);
       await fs.rm(projectDir, { recursive: true, force: true });
@@ -134,8 +128,7 @@ export async function DELETE(
       console.error(`Failed to delete project directory: ${project.slug}`, dirError);
     }
 
-    // Delete from database (cascade will handle images)
-    db.delete(projects).where(eq(projects.id, parseInt(id))).run();
+    await db.delete(projects).where(eq(projects.id, parseInt(id)));
 
     return NextResponse.json({ success: true });
   } catch (error) {

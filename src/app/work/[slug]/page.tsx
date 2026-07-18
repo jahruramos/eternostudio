@@ -10,11 +10,11 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   noStore();
-  const project = db
+  const rows = await db
     .select()
     .from(projects)
-    .where(eq(projects.slug, slug))
-    .get();
+    .where(eq(projects.slug, slug));
+  const project = rows[0];
 
   if (!project) {
     return { title: "Proyecto no encontrado — Eterno Studio™" };
@@ -29,22 +29,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   noStore();
   const { slug } = await params;
-  const project = db
+  const rows = await db
     .select()
     .from(projects)
-    .where(eq(projects.slug, slug))
-    .get();
+    .where(eq(projects.slug, slug));
+  const project = rows[0];
 
   if (!project) {
     notFound();
   }
 
-  const images = db
+  const images = await db
     .select()
     .from(projectImages)
     .where(eq(projectImages.projectId, project.id))
-    .orderBy(asc(projectImages.sortOrder))
-    .all();
+    .orderBy(asc(projectImages.sortOrder));
 
   const projectData = {
     overview: project.overview || "",

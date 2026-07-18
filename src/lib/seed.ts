@@ -1,17 +1,18 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from "@libsql/client";
 import { projects, projectImages } from "./schema";
-import path from "path";
 
-const dbPath = path.join(process.cwd(), "data.db");
-const sqlite = new Database(dbPath);
-const db = drizzle(sqlite);
+const client = createClient({
+  url: process.env.TURSO_DATABASE_URL!,
+  authToken: process.env.TURSO_AUTH_TOKEN,
+});
+
+const db = drizzle(client);
 
 async function seed() {
   console.log("Seeding database...");
 
-  // Insert Vitalis project
-  const vitalisProject = db
+  const vitalisProject = await db
     .insert(projects)
     .values({
       slug: "vitalis",
@@ -25,12 +26,10 @@ async function seed() {
       status: "published",
       sortOrder: 0,
     })
-    .returning()
-    .get();
+    .returning();
 
-  console.log("Created Vitalis project:", vitalisProject.id);
+  console.log("Created Vitalis project:", vitalisProject[0].id);
 
-  // Insert Vitalis images
   const vitalisImages = [
     { src: "/projects/vitalis/vitalis-01.jpg", alt: "Vitalis brand color palette and Pantone specifications" },
     { src: "/projects/vitalis/vitalis-02.jpg", alt: "Vitalis wordmark with margins and safe area guidelines" },
@@ -42,14 +41,12 @@ async function seed() {
   ];
 
   for (let i = 0; i < vitalisImages.length; i++) {
-    db.insert(projectImages)
-      .values({
-        projectId: vitalisProject.id,
-        src: vitalisImages[i].src,
-        alt: vitalisImages[i].alt,
-        sortOrder: i,
-      })
-      .run();
+    await db.insert(projectImages).values({
+      projectId: vitalisProject[0].id,
+      src: vitalisImages[i].src,
+      alt: vitalisImages[i].alt,
+      sortOrder: i,
+    });
   }
 
   console.log(`Created ${vitalisImages.length} images for Vitalis`);

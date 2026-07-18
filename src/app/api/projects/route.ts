@@ -10,18 +10,16 @@ export async function GET(request: NextRequest) {
 
     let allProjects;
     if (status) {
-      allProjects = db
+      allProjects = await db
         .select()
         .from(projects)
         .where(eq(projects.status, status))
-        .orderBy(asc(projects.sortOrder))
-        .all();
+        .orderBy(asc(projects.sortOrder));
     } else {
-      allProjects = db
+      allProjects = await db
         .select()
         .from(projects)
-        .orderBy(asc(projects.sortOrder))
-        .all();
+        .orderBy(asc(projects.sortOrder));
     }
 
     return NextResponse.json(allProjects);
@@ -46,14 +44,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get max sort order
-    const maxOrder = db
+    const maxOrder = await db
       .select({ maxOrder: projects.sortOrder })
-      .from(projects)
-      .all();
+      .from(projects);
     const nextOrder = maxOrder.length > 0 ? Math.max(...maxOrder.map(p => p.maxOrder)) + 1 : 0;
 
-    const newProject = db
+    const newProject = await db
       .insert(projects)
       .values({
         title,
@@ -67,10 +63,9 @@ export async function POST(request: NextRequest) {
         status: status || "draft",
         sortOrder: nextOrder,
       })
-      .returning()
-      .get();
+      .returning();
 
-    return NextResponse.json(newProject, { status: 201 });
+    return NextResponse.json(newProject[0], { status: 201 });
   } catch (error) {
     console.error("Error creating project:", error);
     return NextResponse.json(

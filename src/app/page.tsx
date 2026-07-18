@@ -14,13 +14,12 @@ const socials = [
 
 const PAD = "clamp(20px, 6.25vw, 120px)";
 
-function getThumbs() {
-  const publishedProjects = db
+async function getThumbs() {
+  const publishedProjects = await db
     .select()
     .from(projects)
     .where(eq(projects.status, "published"))
-    .orderBy(asc(projects.sortOrder))
-    .all();
+    .orderBy(asc(projects.sortOrder));
 
   return publishedProjects.map((project) => ({
     src: project.thumbnail || "/images/thumb-vitalis.png",
@@ -29,8 +28,8 @@ function getThumbs() {
   }));
 }
 
-export default function Home() {
-  const thumbs = getThumbs();
+export default async function Home() {
+  const thumbs = await getThumbs();
 
   return (
     <div className="flex min-h-screen flex-col overflow-clip">

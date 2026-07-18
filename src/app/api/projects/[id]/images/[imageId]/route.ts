@@ -11,11 +11,11 @@ export async function DELETE(
 ) {
   try {
     const { imageId } = await params;
-    const image = db
+    const rows = await db
       .select()
       .from(projectImages)
-      .where(eq(projectImages.id, parseInt(imageId)))
-      .get();
+      .where(eq(projectImages.id, parseInt(imageId)));
+    const image = rows[0];
 
     if (!image) {
       return NextResponse.json(
@@ -24,7 +24,6 @@ export async function DELETE(
       );
     }
 
-    // Delete file from disk
     try {
       const imagePath = path.join(process.cwd(), "public", image.src);
       await fs.unlink(imagePath);
@@ -32,8 +31,7 @@ export async function DELETE(
       console.error(`Failed to delete image file: ${image.src}`, fileError);
     }
 
-    // Delete from database
-    db.delete(projectImages).where(eq(projectImages.id, parseInt(imageId))).run();
+    await db.delete(projectImages).where(eq(projectImages.id, parseInt(imageId)));
 
     return NextResponse.json({ success: true });
   } catch (error) {

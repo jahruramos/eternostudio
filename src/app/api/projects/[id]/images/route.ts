@@ -11,11 +11,11 @@ export async function POST(
 ) {
   try {
     const { id } = await params;
-    const project = db
+    const projectRows = await db
       .select()
       .from(projects)
-      .where(eq(projects.id, parseInt(id)))
-      .get();
+      .where(eq(projects.id, parseInt(id)));
+    const project = projectRows[0];
 
     if (!project) {
       return NextResponse.json(
@@ -35,16 +35,13 @@ export async function POST(
       );
     }
 
-    // Ensure project directory exists
     const projectDir = path.join(process.cwd(), "public", "projects", project.slug);
     await fs.mkdir(projectDir, { recursive: true });
 
-    // Get current max sort order
-    const existingImages = db
+    const existingImages = await db
       .select()
       .from(projectImages)
-      .where(eq(projectImages.projectId, project.id))
-      .all();
+      .where(eq(projectImages.projectId, project.id));
     let nextOrder = existingImages.length > 0
       ? Math.max(...existingImages.map(img => img.sortOrder)) + 1
       : 0;
@@ -55,19 +52,16 @@ export async function POST(
       const file = files[i];
       const alt = alts[i] || "";
 
-      // Generate filename
       const ext = path.extname(file.name) || ".jpg";
       const imageNum = String(existingImages.length + i + 1).padStart(2, "0");
       const filename = `${project.slug}-${imageNum}${ext}`;
       const filepath = path.join(projectDir, filename);
 
-      // Save file
       const buffer = Buffer.from(await file.arrayBuffer());
       await fs.writeFile(filepath, buffer);
 
-      // Save to database
       const src = `/projects/${project.slug}/${filename}`;
-      const newImage = db
+      const newImage = await db
         .insert(projectImages)
         .values({
           projectId: project.id,
@@ -75,10 +69,9 @@ export async function POST(
           alt,
           sortOrder: nextOrder++,
         })
-        .returning()
-        .get();
+        .returning();
 
-      uploadedImages.push(newImage);
+      uploadedImages.push(newImage[0]);
     }
 
     return NextResponse.json(uploadedImages, { status: 201 });
@@ -97,12 +90,11 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const images = db
+    const images = await db
       .select()
       .from(projectImages)
       .where(eq(projectImages.projectId, parseInt(id)))
-      .orderBy(asc(projectImages.sortOrder))
-      .all();
+      .orderBy(asc(projectImages.sortOrder));
 
     return NextResponse.json(images);
   } catch (error) {
@@ -119,7 +111,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await params; // ensure params are resolved
+    await params;
     const body = await request.json();
     const { imageId, alt } = body;
 
@@ -130,21 +122,20 @@ export async function PATCH(
       );
     }
 
-    const updatedImage = db
+    const updatedRows = await db
       .update(projectImages)
       .set({ alt })
       .where(eq(projectImages.id, imageId))
-      .returning()
-      .get();
+      .returning();
 
-    if (!updatedImage) {
+    if (!updatedRows[0]) {
       return NextResponse.json(
         { error: "Image not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(updatedImage);
+    return NextResponse.json(updatedRows[0]);
   } catch (error) {
     console.error("Error updating image:", error);
     return NextResponse.json(
