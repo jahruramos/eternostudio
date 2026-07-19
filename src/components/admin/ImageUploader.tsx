@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 interface ProjectImage {
   id: number;
@@ -38,7 +39,7 @@ export default function ImageUploader({
     }
 
     try {
-      const res = await fetch(`/api/projects/${projectId}/images`, {
+      const res = await adminFetch(`/api/projects/${projectId}/images`, {
         method: "POST",
         body: formData,
       });
@@ -62,7 +63,7 @@ export default function ImageUploader({
     if (!confirm("¿Eliminar esta imagen?")) return;
 
     try {
-      await fetch(`/api/projects/${projectId}/images/${imageId}`, {
+      await adminFetch(`/api/projects/${projectId}/images/${imageId}`, {
         method: "DELETE",
       });
       onImagesUpdate(images.filter((img) => img.id !== imageId));
@@ -74,7 +75,7 @@ export default function ImageUploader({
 
   async function handleAltSave(imageId: number) {
     try {
-      await fetch(`/api/projects/${projectId}/images/${imageId}`, {
+      await adminFetch(`/api/projects/${projectId}/images/${imageId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ alt: altValue }),
@@ -98,7 +99,7 @@ export default function ImageUploader({
     onImagesUpdate(newImages);
 
     try {
-      await fetch(`/api/projects/${projectId}/reorder`, {
+      await adminFetch(`/api/projects/${projectId}/reorder`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

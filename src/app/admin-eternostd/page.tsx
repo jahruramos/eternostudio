@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { adminFetch } from "@/lib/admin-fetch";
 
 interface Project {
   id: number;
@@ -22,7 +23,7 @@ export default function AdminDashboard() {
     let cancelled = false;
     async function load() {
       try {
-        const res = await fetch("/api/projects");
+        const res = await adminFetch("/api/projects");
         const data = await res.json();
         if (!cancelled) {
           setProjects(data);
@@ -45,7 +46,7 @@ export default function AdminDashboard() {
     }
 
     try {
-      await fetch(`/api/projects/${id}`, { method: "DELETE" });
+      await adminFetch(`/api/projects/${id}`, { method: "DELETE" });
       setProjects(projects.filter((p) => p.id !== id));
     } catch (error) {
       console.error("Error deleting project:", error);
@@ -56,7 +57,7 @@ export default function AdminDashboard() {
   async function handleStatusToggle(id: number, currentStatus: string) {
     const newStatus = currentStatus === "published" ? "draft" : "published";
     try {
-      await fetch(`/api/projects/${id}`, {
+      await adminFetch(`/api/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

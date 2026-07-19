@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { adminFetch } from "@/lib/admin-fetch";
 
 interface ProjectFormData {
   title: string;
@@ -62,7 +63,7 @@ export default function ProjectForm({ initialData, mode }: ProjectFormProps) {
     formDataUpload.append("file", file);
 
     try {
-      const res = await fetch("/api/upload", {
+      const res = await adminFetch("/api/upload", {
         method: "POST",
         body: formDataUpload,
       });
@@ -91,7 +92,7 @@ export default function ProjectForm({ initialData, mode }: ProjectFormProps) {
           : `/api/projects/${initialData?.id}`;
       const method = mode === "create" ? "POST" : "PUT";
 
-      const res = await fetch(url, {
+      const res = await adminFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -5,6 +5,14 @@ import { eq } from "drizzle-orm";
 import fs from "fs/promises";
 import path from "path";
 
+function isSafePath(src: string): boolean {
+  if (src.startsWith("/projects/") || src.startsWith("/images/")) {
+    const normalized = path.normalize(src);
+    return normalized === src && !normalized.includes("..");
+  }
+  return false;
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; imageId: string }> }
@@ -21,6 +29,13 @@ export async function DELETE(
       return NextResponse.json(
         { error: "Image not found" },
         { status: 404 }
+      );
+    }
+
+    if (!isSafePath(image.src)) {
+      return NextResponse.json(
+        { error: "Invalid image path" },
+        { status: 400 }
       );
     }
 

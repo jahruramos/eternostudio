@@ -5,6 +5,13 @@ import { eq, asc } from "drizzle-orm";
 import fs from "fs/promises";
 import path from "path";
 
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+function isSafeSlug(slug: string): boolean {
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -24,6 +31,13 @@ export async function POST(
       );
     }
 
+    if (!isSafeSlug(project.slug)) {
+      return NextResponse.json(
+        { error: "Invalid project slug" },
+        { status: 400 }
+      );
+    }
+
     const formData = await request.formData();
     const files = formData.getAll("images") as File[];
     const alts = formData.getAll("alts") as string[];
@@ -33,6 +47,21 @@ export async function POST(
         { error: "No images provided" },
         { status: 400 }
       );
+    }
+
+    for (const file of files) {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        return NextResponse.json(
+          { error: `Invalid file type: ${file.name}. Allowed: JPG, PNG, WebP, SVG` },
+          { status: 400 }
+        );
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json(
+          { error: `File too large: ${file.name}. Max 10MB` },
+          { status: 400 }
+        );
+      }
     }
 
     const projectDir = path.join(process.cwd(), "public", "projects", project.slug);
@@ -122,9 +151,11 @@ export async function PATCH(
       );
     }
 
+    const sanitizedAlt = typeof alt === "string" ? alt.trim().slice(0, 500) : "";
+
     const updatedRows = await db
       .update(projectImages)
-      .set({ alt })
+      .set({ alt: sanitizedAlt })
       .where(eq(projectImages.id, imageId))
       .returning();
 
