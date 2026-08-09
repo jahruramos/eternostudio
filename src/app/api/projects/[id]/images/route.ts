@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { projects, projectImages } from "@/lib/schema";
 import { eq, asc } from "drizzle-orm";
-import fs from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -64,9 +63,6 @@ export async function POST(
       }
     }
 
-    const projectDir = path.join(process.cwd(), "public", "projects", project.slug);
-    await fs.mkdir(projectDir, { recursive: true });
-
     const existingImages = await db
       .select()
       .from(projectImages)
@@ -81,15 +77,16 @@ export async function POST(
       const file = files[i];
       const alt = alts[i] || "";
 
-      const ext = path.extname(file.name) || ".jpg";
+      const ext = file.name.includes(".") ? file.name.split(".").pop() : "jpg";
       const imageNum = String(existingImages.length + i + 1).padStart(2, "0");
-      const filename = `${project.slug}-${imageNum}${ext}`;
-      const filepath = path.join(projectDir, filename);
+      const pathname = `projects/${project.slug}/${project.slug}-${imageNum}.${ext}`;
 
-      const buffer = Buffer.from(await file.arrayBuffer());
-      await fs.writeFile(filepath, buffer);
+      const blob = await put(pathname, file, {
+        access: "public",
+        addRandomSuffix: false,
+      });
 
-      const src = `/projects/${project.slug}/${filename}`;
+      const src = blob.url;
       const newImage = await db
         .insert(projectImages)
         .values({

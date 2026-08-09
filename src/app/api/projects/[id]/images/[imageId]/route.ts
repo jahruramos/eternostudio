@@ -2,16 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { projectImages } from "@/lib/schema";
 import { eq } from "drizzle-orm";
-import fs from "fs/promises";
-import path from "path";
-
-function isSafePath(src: string): boolean {
-  if (src.startsWith("/projects/") || src.startsWith("/images/")) {
-    const normalized = path.normalize(src);
-    return normalized === src && !normalized.includes("..");
-  }
-  return false;
-}
+import { del } from "@vercel/blob";
 
 export async function DELETE(
   request: NextRequest,
@@ -32,18 +23,12 @@ export async function DELETE(
       );
     }
 
-    if (!isSafePath(image.src)) {
-      return NextResponse.json(
-        { error: "Invalid image path" },
-        { status: 400 }
-      );
-    }
-
-    try {
-      const imagePath = path.join(process.cwd(), "public", image.src);
-      await fs.unlink(imagePath);
-    } catch (fileError) {
-      console.error(`Failed to delete image file: ${image.src}`, fileError);
+    if (image.src.startsWith("http")) {
+      try {
+        await del(image.src);
+      } catch (fileError) {
+        console.error(`Failed to delete blob: ${image.src}`, fileError);
+      }
     }
 
     await db.delete(projectImages).where(eq(projectImages.id, parseInt(imageId)));

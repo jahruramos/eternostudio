@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
 const MAX_SIZE = 5 * 1024 * 1024;
@@ -31,17 +30,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const uploadDir = path.join(process.cwd(), "public", "images", "thumbnails");
-    await fs.mkdir(uploadDir, { recursive: true });
+    const ext = file.name.includes(".") ? file.name.split(".").pop() : "jpg";
+    const pathname = `thumbnails/thumb-${Date.now()}.${ext}`;
 
-    const ext = path.extname(file.name) || ".jpg";
-    const filename = `thumb-${Date.now()}${ext}`;
-    const filepath = path.join(uploadDir, filename);
+    const blob = await put(pathname, file, {
+      access: "public",
+      addRandomSuffix: false,
+    });
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(filepath, buffer);
-
-    return NextResponse.json({ url: `/images/thumbnails/${filename}` });
+    return NextResponse.json({ url: blob.url });
   } catch (error) {
     console.error("Error uploading file:", error);
     return NextResponse.json(
