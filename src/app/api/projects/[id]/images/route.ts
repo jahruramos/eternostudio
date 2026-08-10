@@ -2,110 +2,31 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { projects, projectImages } from "@/lib/schema";
 import { eq, asc } from "drizzle-orm";
-import { put } from "@vercel/blob";
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-function isSafeSlug(slug: string): boolean {
-  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
-}
-
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest) {
   try {
-    const { id } = await params;
-    const projectRows = await db
-      .select()
-      .from(projects)
-      .where(eq(projects.id, parseInt(id)));
-    const project = projectRows[0];
+    const body = (await request.json()) as HandleUploadBody;
 
-    if (!project) {
-      return NextResponse.json(
-        { error: "Project not found" },
-        { status: 404 }
-      );
-    }
-
-    if (!isSafeSlug(project.slug)) {
-      return NextResponse.json(
-        { error: "Invalid project slug" },
-        { status: 400 }
-      );
-    }
-
-    const formData = await request.formData();
-    const files = formData.getAll("images") as File[];
-    const alts = formData.getAll("alts") as string[];
-
-    if (!files || files.length === 0) {
-      return NextResponse.json(
-        { error: "No images provided" },
-        { status: 400 }
-      );
-    }
-
-    for (const file of files) {
-      if (!ALLOWED_TYPES.includes(file.type)) {
-        return NextResponse.json(
-          { error: `Invalid file type: ${file.name}. Allowed: JPG, PNG, WebP, SVG` },
-          { status: 400 }
-        );
-      }
-      if (file.size > MAX_FILE_SIZE) {
-        return NextResponse.json(
-          { error: `File too large: ${file.name}. Max 10MB` },
-          { status: 400 }
-        );
-      }
-    }
-
-    const existingImages = await db
-      .select()
-      .from(projectImages)
-      .where(eq(projectImages.projectId, project.id));
-    let nextOrder = existingImages.length > 0
-      ? Math.max(...existingImages.map(img => img.sortOrder)) + 1
-      : 0;
-
-    const uploadedImages = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const alt = alts[i] || "";
-
-      const ext = file.name.includes(".") ? file.name.split(".").pop() : "jpg";
-      const imageNum = String(existingImages.length + i + 1).padStart(2, "0");
-      const pathname = `projects/${project.slug}/${project.slug}-${imageNum}.${ext}`;
-
-      const blob = await put(pathname, file, {
-        access: "public",
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async () => ({
+        allowedContentTypes: ALLOWED_TYPES,
+        maximumSizeInBytes: MAX_FILE_SIZE,
         addRandomSuffix: false,
-      });
+      }),
+    });
 
-      const src = blob.url;
-      const newImage = await db
-        .insert(projectImages)
-        .values({
-          projectId: project.id,
-          src,
-          alt,
-          sortOrder: nextOrder++,
-        })
-        .returning();
-
-      uploadedImages.push(newImage[0]);
-    }
-
-    return NextResponse.json(uploadedImages, { status: 201 });
+    return NextResponse.json(jsonResponse);
   } catch (error) {
-    console.error("Error uploading images:", error);
+    console.error("Error generating upload token:", error);
     return NextResponse.json(
-      { error: "Failed to upload images" },
-      { status: 500 }
+      { error: (error as Error).message || "Failed to start upload" },
+      { status: 400 }
     );
   }
 }
@@ -127,47 +48,6 @@ export async function GET(
     console.error("Error fetching images:", error);
     return NextResponse.json(
       { error: "Failed to fetch images" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    await params;
-    const body = await request.json();
-    const { imageId, alt } = body;
-
-    if (!imageId) {
-      return NextResponse.json(
-        { error: "Image ID is required" },
-        { status: 400 }
-      );
-    }
-
-    const sanitizedAlt = typeof alt === "string" ? alt.trim().slice(0, 500) : "";
-
-    const updatedRows = await db
-      .update(projectImages)
-      .set({ alt: sanitizedAlt })
-      .where(eq(projectImages.id, imageId))
-      .returning();
-
-    if (!updatedRows[0]) {
-      return NextResponse.json(
-        { error: "Image not found" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(updatedRows[0]);
-  } catch (error) {
-    console.error("Error updating image:", error);
-    return NextResponse.json(
-      { error: "Failed to update image" },
       { status: 500 }
     );
   }

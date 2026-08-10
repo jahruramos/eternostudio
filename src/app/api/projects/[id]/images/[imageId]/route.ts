@@ -42,3 +42,37 @@ export async function DELETE(
     );
   }
 }
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string; imageId: string }> }
+) {
+  try {
+    const { imageId } = await params;
+    const body = await request.json();
+    const { alt } = body;
+
+    const sanitizedAlt = typeof alt === "string" ? alt.trim().slice(0, 500) : "";
+
+    const updatedRows = await db
+      .update(projectImages)
+      .set({ alt: sanitizedAlt })
+      .where(eq(projectImages.id, parseInt(imageId)))
+      .returning();
+
+    if (!updatedRows[0]) {
+      return NextResponse.json(
+        { error: "Image not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedRows[0]);
+  } catch (error) {
+    console.error("Error updating image:", error);
+    return NextResponse.json(
+      { error: "Failed to update image" },
+      { status: 500 }
+    );
+  }
+}

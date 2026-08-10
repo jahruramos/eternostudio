@@ -2,7 +2,8 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { adminFetch } from "@/lib/admin-fetch";
+import { upload } from "@vercel/blob/client";
+import { adminFetch, authHeaders } from "@/lib/admin-fetch";
 
 interface ProjectFormData {
   title: string;
@@ -59,20 +60,19 @@ export default function ProjectForm({ initialData, mode }: ProjectFormProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const formDataUpload = new FormData();
-    formDataUpload.append("file", file);
-
     try {
-      const res = await adminFetch("/api/upload", {
-        method: "POST",
-        body: formDataUpload,
+      const ext = file.name.includes(".") ? file.name.split(".").pop() : "jpg";
+      const blob = await upload(`thumbnails/thumb-${Date.now()}.${ext}`, file, {
+        access: "public",
+        contentType: file.type,
+        handleUploadUrl: "/api/upload",
+        headers: authHeaders(),
       });
-      const data = await res.json();
-      if (data.url) {
-        setFormData((prev) => ({ ...prev, thumbnail: data.url }));
-      }
+
+      setFormData((prev) => ({ ...prev, thumbnail: blob.url }));
     } catch (error) {
       console.error("Error uploading thumbnail:", error);
+      alert("Error al subir el thumbnail");
     }
   }
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { adminFetch } from "@/lib/admin-fetch";
+import { upload } from "@vercel/blob/client";
+import { adminFetch, authHeaders } from "@/lib/admin-fetch";
 
 interface ProjectImage {
   id: number;
@@ -31,23 +32,36 @@ export default function ImageUploader({
     if (!files || files.length === 0) return;
 
     setUploading(true);
-    const formData = new FormData();
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append("images", files[i]);
-      formData.append("alts", "");
-    }
 
     try {
-      const res = await adminFetch(`/api/projects/${projectId}/images`, {
-        method: "POST",
-        body: formData,
-      });
+      const uploadedImages: ProjectImage[] = [];
 
-      if (!res.ok) throw new Error("Upload failed");
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
 
-      const newImages = await res.json();
-      onImagesUpdate([...images, ...newImages]);
+        const ext = file.name.includes(".") ? file.name.split(".").pop() : "jpg";
+        const pathname = `projects/${projectId}/img-${Date.now()}-${i}.${ext}`;
+
+        const blob = await upload(pathname, file, {
+          access: "public",
+          contentType: file.type,
+          handleUploadUrl: `/api/projects/${projectId}/images`,
+          headers: authHeaders(),
+        });
+
+        const res = await adminFetch(`/api/projects/${projectId}/images/complete`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: blob.url, alt: "" }),
+        });
+
+        if (!res.ok) throw new Error("Failed to save image");
+
+        const newImage = await res.json();
+        uploadedImages.push(newImage);
+      }
+
+      onImagesUpdate([...images, ...uploadedImages]);
     } catch (error) {
       console.error("Error uploading images:", error);
       alert("Error al subir las imágenes");
