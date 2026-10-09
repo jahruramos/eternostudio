@@ -109,7 +109,7 @@ export default function ProjectView({ project }: { project: Project }) {
         </div>
       </main>
 
-      <Footer pad={PAD} />
+      <Footer pad={PAD} className="pt-[150px]" />
     </div>
   );
 }

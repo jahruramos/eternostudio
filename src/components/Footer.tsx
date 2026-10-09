@@ -4,10 +4,10 @@ const socials = [
   { label: "Tik-Tok", href: "https://tiktok.com" },
 ];
 
-export default function Footer({ pad }: { pad: string }) {
+export default function Footer({ pad, className = "" }: { pad: string; className?: string }) {
   return (
     <footer
-      className="flex flex-col gap-4 py-[26px] font-chivo text-[12px] uppercase leading-[20px] tracking-[0.24px] sm:flex-row sm:items-center sm:justify-between"
+      className={`flex flex-col gap-4 py-[26px] font-chivo text-[12px] uppercase leading-[20px] tracking-[0.24px] sm:flex-row sm:items-center sm:justify-between ${className}`}
       style={{ paddingInline: pad }}
     >
       <p className="whitespace-pre-wrap">
