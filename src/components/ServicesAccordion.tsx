@@ -68,6 +68,7 @@ const services: Service[] = [
       ],
       description:
         "Te acompañamos a tomar mejores decisiones de marca y diseño. Una mirada externa y estratégica para ordenar ideas, detectar oportunidades y trazar el camino.",
+      image: "/images/services-consultoria.jpg",
     },
   },
   {
@@ -83,6 +84,7 @@ const services: Service[] = [
       ],
       description:
         "Piezas que comunican con claridad y mantienen tu marca consistente en cada punto de contacto, digital o impreso.",
+      image: "/images/services-diseno.jpg",
     },
   },
 ];
@@ -146,7 +148,7 @@ export default function ServicesAccordion({ pad }: { pad: string }) {
                       {s.detail.description}
                     </p>
                     <a
-                      href="mailto:hello@eternostd.com"
+                      href="/contact"
                       className="self-start font-helvetica text-[clamp(22px,1.35vw,26px)] font-medium uppercase leading-none tracking-[-0.02em] underline underline-offset-4 transition-opacity duration-200 hover:opacity-70"
                     >
                       Start a project

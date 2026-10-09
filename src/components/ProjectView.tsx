@@ -10,7 +10,7 @@ const PAD = "clamp(20px, 6.25vw, 40px)";
 
 const LABEL =
   "font-chivo text-[12px] uppercase leading-[20px] tracking-[0.24px] underline underline-offset-2";
-const VALUE = "font-helvetica text-[18px] leading-[25px] tracking-[-0.03em]";
+const VALUE = "font-helvetica text-[16px] leading-[25px] tracking-[-0.03em]";
 
 // Underline the project name when the overview opens with it
 function withUnderlinedTitle(text: string, title: string) {
@@ -33,7 +33,13 @@ type Project = {
   images: { src: string; alt: string }[];
 };
 
-export default function ProjectView({ project }: { project: Project }) {
+export default function ProjectView({
+  project,
+  nextHref,
+}: {
+  project: Project;
+  nextHref?: string;
+}) {
   const [headerHidden, setHeaderHidden] = useState(false);
 
   useEffect(() => {
@@ -59,24 +65,34 @@ export default function ProjectView({ project }: { project: Project }) {
         className="flex-1"
         style={{ paddingInline: PAD }}
       >
-        <div className="grid gap-x-[clamp(32px,4vw,64px)] gap-y-12 pt-[clamp(60px,9vw,150px)] lg:grid-cols-[minmax(0,765fr)_minmax(0,1055fr)] lg:gap-x-0 lg:pt-[clamp(110px,11.6vw,222px)]">
+        <div className="grid gap-x-[clamp(32px,4vw,64px)] gap-y-12 pt-[calc(clamp(60px,9vw,150px)-70px)] lg:grid-cols-[minmax(0,765fr)_minmax(0,1055fr)] lg:gap-x-0 lg:pt-[calc(clamp(110px,11.6vw,222px)-70px)]">
           {/* Info column — overview on top, meta pinned to the bottom of the viewport */}
-          <div className="flex flex-col justify-between gap-[64px] bg-negro lg:sticky lg:top-[clamp(110px,11.6vw,222px)] lg:z-10 lg:min-h-[calc(100svh-clamp(110px,11.6vw,222px)-46px)] lg:self-start lg:pr-[clamp(32px,4vw,64px)]">
+          <div className="flex flex-col justify-between gap-[64px] bg-negro lg:sticky lg:top-[calc(clamp(110px,11.6vw,222px)-70px)] lg:z-10 lg:min-h-[calc(100svh-clamp(110px,11.6vw,222px)+70px-46px)] lg:self-start lg:pr-[clamp(32px,4vw,64px)]">
             <div>
               <p className={LABEL}>Overview</p>
-              <div className="mt-[31px] max-w-[597px] font-helvetica text-[20px] leading-[25px] tracking-[-0.013em]">
+              <div className="mt-[31px] max-w-[597px] font-helvetica text-[16px] leading-[23px] tracking-[-0.013em]">
                 {project.overview.split("\n\n").filter(Boolean).map((p, i) => (
                   <p key={i} className="mb-[25px] last:mb-0">
                     {i === 0 ? withUnderlinedTitle(p, project.title) : p}
                   </p>
                 ))}
               </div>
-              <Link
-                href="/work"
-                className={`mt-[120px] inline-block transition-opacity duration-200 hover:opacity-70 ${LABEL}`}
-              >
-                Back
-              </Link>
+              <div className="mt-[90px] flex max-w-[597px] items-center justify-between">
+                <Link
+                  href="/work"
+                  className={`transition-opacity duration-200 hover:opacity-70 ${LABEL}`}
+                >
+                  Back
+                </Link>
+                {nextHref && (
+                  <Link
+                    href={nextHref}
+                    className={`transition-opacity duration-200 hover:opacity-70 ${LABEL}`}
+                  >
+                    Siguiente
+                  </Link>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col gap-[52px]">

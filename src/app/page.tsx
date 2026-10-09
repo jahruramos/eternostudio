@@ -18,7 +18,7 @@ export default async function Home() {
       <Navbar pad={PAD} />
 
       {/* Hero — wordmark with animated emblem behind + tagline */}
-      <main className="flex flex-1 flex-col items-center justify-center pt-[120px]" style={{ paddingInline: PAD }}>
+      <main className="flex flex-1 -translate-y-[70px] flex-col items-center justify-center pt-[120px]" style={{ paddingInline: PAD }}>
         <div
           className="relative mx-auto flex w-full max-w-[1400px] items-center justify-center"
           aria-label="Eterno Studio"
@@ -41,7 +41,7 @@ export default async function Home() {
             <img
               src="/images/hero-wordmark.svg"
               alt="Eterno Studio™"
-              className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-full -translate-x-1/2 -translate-y-1/2"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-full -translate-x-1/2 -translate-y-1/2 animate-wordmark-in"
             />
             {/* eslint-enable @next/next/no-img-element */}
         </div>
@@ -57,7 +57,7 @@ export default async function Home() {
       {/* About */}
       <section
         id="about"
-        className="flex flex-col items-center pb-[clamp(120px,18vh,240px)] pt-[290px] text-center"
+        className="flex flex-col items-center pb-[clamp(120px,18vh,240px)] pt-[190px] text-center"
         style={{ paddingInline: PAD }}
       >
         <p className="font-chivo text-[12px] uppercase tracking-[0.24px] underline underline-offset-2">

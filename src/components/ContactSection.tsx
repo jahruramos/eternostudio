@@ -1,6 +1,6 @@
 const contactLines = [
   { label: "SAN BORJA, LIMA - PE." },
-  { label: "+51 902 065 575", href: "tel:+51902065575" },
+  { label: "+51 902 064 575", href: "tel:+51902064575" },
   { label: "hello@eternostd.com", href: "mailto:hello@eternostd.com", gapBefore: true },
   { label: "@eterno.std", href: "https://www.instagram.com/eterno.std/", gapBefore: true },
 ];
@@ -51,7 +51,7 @@ export default function ContactSection({ pad }: { pad: string }) {
             ))}
           </ul>
           <a
-            href="mailto:hello@eternostd.com"
+            href="/contact"
             className="font-helvetica text-[clamp(28px,2.6vw,40px)] font-medium uppercase leading-[1.05] tracking-[-0.02em] underline underline-offset-4 transition-opacity duration-200 hover:opacity-70"
           >
             Start a project

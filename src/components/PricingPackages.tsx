@@ -4,6 +4,7 @@ import { useState } from "react";
 
 // Paying up front takes this much off the installment price
 const UPFRONT_DISCOUNT = 0.2;
+const WHATSAPP_URL = "https://wa.me/51902064575";
 
 type Package = {
   name: string;
@@ -33,7 +34,7 @@ const packages: Package[] = [
       "Sistema visual",
       "Guía de Estilo",
     ],
-    price: 500,
+    price: 1500,
   },
   {
     name: "Branding",
@@ -50,7 +51,7 @@ const packages: Package[] = [
       "Concepto estratégico",
       "Manual de Marca",
     ],
-    price: 1100,
+    price: 2200,
     featured: true,
   },
   {
@@ -101,11 +102,11 @@ export default function PricingPackages({ pad }: { pad: string }) {
           aria-checked={upfront}
           aria-label="Pago al contado"
           onClick={() => setUpfront((v) => !v)}
-          className="relative h-[46px] w-[101px] shrink-0 rounded-full border border-[#d9d9d9]"
+          className="relative h-[32px] w-[71px] shrink-0 rounded-full border border-[#d9d9d9]"
         >
           <span
-            className={`absolute left-[7px] top-1/2 size-[34px] -translate-y-1/2 rounded-full bg-cream transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              upfront ? "translate-x-[53px]" : "translate-x-0"
+            className={`absolute left-[5px] top-1/2 size-[24px] -translate-y-1/2 rounded-full bg-cream transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              upfront ? "translate-x-[37px]" : "translate-x-0"
             }`}
           />
         </button>
@@ -123,7 +124,7 @@ export default function PricingPackages({ pad }: { pad: string }) {
         {packages.map((p) => {
           const price = p.custom
             ? p.custom.value
-            : `$${Math.round(upfront ? p.price * (1 - UPFRONT_DISCOUNT) : p.price)}`;
+            : `S/.${Math.round(upfront ? p.price * (1 - UPFRONT_DISCOUNT) : p.price)}`;
           const note = p.custom
             ? p.custom.note
             : upfront
@@ -131,6 +132,8 @@ export default function PricingPackages({ pad }: { pad: string }) {
               : "Pago en dos cuotas.";
 
           const border = p.featured ? "border-cream" : "border-[#3a3a3a]";
+          const ctaHref = p.custom ? "/contact" : WHATSAPP_URL;
+          const ctaExternal = ctaHref.startsWith("http");
 
           return (
             <article
@@ -175,7 +178,9 @@ export default function PricingPackages({ pad }: { pad: string }) {
 
               {/* CTA */}
               <a
-                href="mailto:hello@eternostd.com"
+                href={ctaHref}
+                target={ctaExternal ? "_blank" : undefined}
+                rel={ctaExternal ? "noreferrer" : undefined}
                 className={`mt-[clamp(40px,3.6vw,69px)] flex items-center justify-center border py-[clamp(24px,2.07vw,40px)] font-helvetica text-[clamp(18px,1.12vw,21.5px)] font-medium uppercase leading-none tracking-[-0.02em] underline underline-offset-4 transition-opacity duration-200 hover:opacity-70 ${border}`}
               >
                 Start a project

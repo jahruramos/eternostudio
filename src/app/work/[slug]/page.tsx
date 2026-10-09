@@ -45,6 +45,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     .where(eq(projectImages.projectId, project.id))
     .orderBy(asc(projectImages.sortOrder));
 
+  const published = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.status, "published"))
+    .orderBy(asc(projects.sortOrder));
+
+  const currentIndex = published.findIndex((p) => p.slug === slug);
+  const nextProject =
+    currentIndex >= 0 && published.length > 1
+      ? published[(currentIndex + 1) % published.length]
+      : undefined;
+
   const projectData = {
     title: project.title,
     overview: project.overview || "",
@@ -55,5 +67,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     images: images.map((img) => ({ src: img.src, alt: img.alt || "" })),
   };
 
-  return <ProjectView project={projectData} />;
+  return (
+    <ProjectView
+      project={projectData}
+      nextHref={nextProject ? `/work/${nextProject.slug}` : undefined}
+    />
+  );
 }

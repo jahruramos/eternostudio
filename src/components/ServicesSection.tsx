@@ -84,7 +84,7 @@ export default function ServicesSection({ pad }: { pad: string }) {
   return (
     <section
       id="services"
-      className="pb-[clamp(120px,18vh,240px)] pt-[clamp(80px,12vh,160px)]"
+      className="pb-[calc(clamp(120px,18vh,240px)+150px)] pt-[clamp(80px,12vh,160px)]"
       style={{ paddingInline: pad }}
     >
       <p className="font-chivo text-[12px] uppercase tracking-[0.24px] underline underline-offset-2">
