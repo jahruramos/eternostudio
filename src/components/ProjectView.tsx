@@ -2,15 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import GallerySection from "@/components/GallerySection";
 
 const PAD = "clamp(20px, 6.25vw, 40px)";
-
-const socials = [
-  { label: "Instagram", href: "https://www.instagram.com/eterno.std/" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "TikTok", href: "https://tiktok.com" },
-];
 
 type Project = {
   overview: string;
@@ -85,29 +80,7 @@ export default function ProjectView({ project }: { project: Project }) {
         </div>
       </main>
 
-      <footer
-        className="flex flex-col gap-4 pb-[clamp(24px,5vh,56px)] pt-[clamp(28px,5vh,60px)] text-[12px] sm:flex-row sm:items-end sm:justify-between"
-        style={{ paddingInline: PAD }}
-      >
-        <p className="tracking-[0.42px]">
-          ETERNO STUDIO©2026&nbsp;&nbsp;Creative Studio &amp; Strategic Design
-        </p>
-        <div className="flex items-center gap-[clamp(16px,2vw,36px)]">
-          {socials.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 uppercase relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-cream after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
-            >
-              {s.label}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/arrow-outward.svg" alt="" className="size-[1.4em]" />
-            </a>
-          ))}
-        </div>
-      </footer>
+      <Footer pad={PAD} />
     </div>
   );
 }

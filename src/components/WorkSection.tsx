@@ -18,7 +18,7 @@ export default function WorkSection({
   return (
     <section
       id="work"
-      className="flex flex-col gap-[50px] pb-[clamp(80px,12vh,160px)]"
+      className="flex flex-col gap-[50px]"
       style={{ paddingInline: pad }}
     >
       {/* Header — title + show more */}
