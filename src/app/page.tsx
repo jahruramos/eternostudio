@@ -1,5 +1,11 @@
 import Navbar from "@/components/Navbar";
 import ServicesSection from "@/components/ServicesSection";
+import WorkSection from "@/components/WorkSection";
+import { db } from "@/lib/db";
+import { projects } from "@/lib/schema";
+import { eq, asc } from "drizzle-orm";
+
+export const dynamic = "force-dynamic";
 
 const socials = [
   { label: "Instagram", href: "https://www.instagram.com/eterno.std/" },
@@ -9,7 +15,24 @@ const socials = [
 
 const PAD = "clamp(20px, 6.25vw, 50px)";
 
-export default function Home() {
+async function getWork() {
+  const publishedProjects = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.status, "published"))
+    .orderBy(asc(projects.sortOrder))
+    .limit(4);
+
+  return publishedProjects.map((project) => ({
+    src: project.thumbnail || "/images/thumb-vitalis.png",
+    alt: `${project.title} branding`,
+    href: `/work/${project.slug}`,
+  }));
+}
+
+export default async function Home() {
+  const work = await getWork();
+
   return (
     <div className="flex min-h-screen flex-col overflow-clip">
       {/* Nav */}
@@ -76,6 +99,9 @@ export default function Home() {
 
       {/* Services */}
       <ServicesSection pad={PAD} />
+
+      {/* Work */}
+      <WorkSection pad={PAD} items={work} />
 
       {/* Footer */}
       <footer
