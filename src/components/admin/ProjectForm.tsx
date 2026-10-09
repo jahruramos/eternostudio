@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { upload } from "@vercel/blob/client";
 import { adminFetch, authHeaders } from "@/lib/admin-fetch";
@@ -25,6 +25,7 @@ interface ProjectFormProps {
 export default function ProjectForm({ initialData, mode }: ProjectFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const overviewRef = useRef<HTMLTextAreaElement>(null);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<ProjectFormData>({
     title: initialData?.title || "",
@@ -38,11 +39,26 @@ export default function ProjectForm({ initialData, mode }: ProjectFormProps) {
     status: initialData?.status || "draft",
   });
 
+  useEffect(() => {
+    if (overviewRef.current) {
+      autoResize(overviewRef.current);
+    }
+  }, []);
+
+  function autoResize(el: HTMLTextAreaElement) {
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }
+
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "overview") {
+      autoResize(e.target as HTMLTextAreaElement);
+    }
 
     // Auto-generate slug from title
     if (name === "title" && mode === "create") {
@@ -238,11 +254,12 @@ export default function ProjectForm({ initialData, mode }: ProjectFormProps) {
       <div>
         <label className="block text-sm text-cream/50 mb-2">Descripción</label>
         <textarea
+          ref={overviewRef}
           name="overview"
           value={formData.overview}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-3 bg-cream/5 border border-cream/10 focus:border-cream/30 outline-none transition-colors resize-none"
+          className="w-full px-4 py-3 bg-cream/5 border border-cream/10 focus:border-cream/30 outline-none transition-colors resize-none overflow-hidden"
         />
       </div>
 
