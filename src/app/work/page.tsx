@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import WorkMarquee from "@/components/WorkMarquee";
+import TitleMarquee from "@/components/TitleMarquee";
 import WorkGrid from "@/components/WorkGrid";
 import ContactSection from "@/components/ContactSection";
 import { getPublishedWork } from "@/lib/work";
@@ -23,7 +23,7 @@ export default async function WorkPage() {
 
       {/* Title marquee */}
       <div className="pt-[clamp(32px,3.4vw,65px)]">
-        <WorkMarquee count={work.length} />
+        <TitleMarquee text="WORK" count={work.length} />
       </div>
 
       {/* Projects */}

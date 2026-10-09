@@ -7,7 +7,7 @@ const navLinks = [
   { label: "Home", href: "/", match: (p: string) => p === "/" },
   { label: "Work", href: "/work", match: (p: string) => p.startsWith("/work") },
   { label: "About", href: "#", match: () => false },
-  { label: "Services", href: "#", match: () => false },
+  { label: "Services", href: "/services", match: (p: string) => p.startsWith("/services") },
 ];
 
 export default function Navbar({
