@@ -3,31 +3,14 @@ import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
 import WorkSection from "@/components/WorkSection";
 import ContactSection from "@/components/ContactSection";
-import { db } from "@/lib/db";
-import { projects } from "@/lib/schema";
-import { eq, asc } from "drizzle-orm";
+import { getPublishedWork } from "@/lib/work";
 
 export const dynamic = "force-dynamic";
 
 const PAD = "clamp(20px, 6.25vw, 40px)";
 
-async function getWork() {
-  const publishedProjects = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.status, "published"))
-    .orderBy(asc(projects.sortOrder))
-    .limit(4);
-
-  return publishedProjects.map((project) => ({
-    src: project.thumbnail || "/images/thumb-vitalis.png",
-    alt: `${project.title} branding`,
-    href: `/work/${project.slug}`,
-  }));
-}
-
 export default async function Home() {
-  const work = await getWork();
+  const work = await getPublishedWork(4);
 
   return (
     <div className="flex min-h-screen flex-col overflow-clip">

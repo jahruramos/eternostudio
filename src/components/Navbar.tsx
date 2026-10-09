@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { label: "Home", href: "/", match: (p: string) => p === "/" },
-  { label: "Work", href: "#", match: (p: string) => p.startsWith("/work") },
+  { label: "Work", href: "/work", match: (p: string) => p.startsWith("/work") },
   { label: "About", href: "#", match: () => false },
   { label: "Services", href: "#", match: () => false },
 ];
