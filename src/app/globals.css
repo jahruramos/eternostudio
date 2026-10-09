@@ -26,11 +26,12 @@ a, button, [role="button"] {
 }
 
 .custom-cursor {
+  --cursor-scale: 1;
   position: fixed;
-  top: -4px;
-  left: -4px;
-  width: 8px;
-  height: 8px;
+  top: -6px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: var(--cream);
   mix-blend-mode: difference;
@@ -42,6 +43,10 @@ a, button, [role="button"] {
               top 0.2s cubic-bezier(0.22, 1, 0.36, 1),
               left 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+}
+
+.custom-cursor.is-hover {
+  --cursor-scale: 1.15;
 }
 
 @media (pointer: coarse) {
