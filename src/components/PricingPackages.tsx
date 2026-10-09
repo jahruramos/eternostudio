@@ -41,7 +41,7 @@ const packages: Package[] = [
       "Sistema visual",
       "Guía de Estilo",
     ],
-    price: 1500,
+    price: 1800,
   },
   {
     name: "Branding",
@@ -58,7 +58,7 @@ const packages: Package[] = [
       "Concepto estratégico",
       "Manual de Marca",
     ],
-    price: 2200,
+    price: 2800,
     featured: true,
   },
   {
