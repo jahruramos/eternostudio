@@ -11,7 +11,7 @@ type Service = {
 
 const services: Service[] = [
   {
-    n: "001",
+    n: "01",
     name: "Branding",
     description: (
       <>
@@ -31,7 +31,7 @@ const services: Service[] = [
     ],
   },
   {
-    n: "002",
+    n: "02",
     name: "Identidad Visual",
     description:
       "Creamos sistemas visuales coherentes y distintivos que traducen la esencia de una marca en una identidad reconocible y memorable.",
@@ -45,7 +45,7 @@ const services: Service[] = [
     ],
   },
   {
-    n: "003",
+    n: "03",
     name: "Consultoría Creativa",
     description:
       "Analizamos tu marca desde una perspectiva estratégica y creativa para encontrar oportunidades, mejorar su dirección y potenciar su comunicación.",
@@ -59,7 +59,7 @@ const services: Service[] = [
     ],
   },
   {
-    n: "004",
+    n: "04",
     name: "Diseño Gráfico",
     description:
       "Desarrollamos piezas gráficas que llevan la identidad de tu marca a distintos puntos de contacto, manteniendo coherencia y carácter.",
@@ -100,15 +100,15 @@ export default function ServicesSection({ pad }: { pad: string }) {
                 type="button"
                 onClick={() => setActiveIndex(i)}
                 aria-pressed={i === activeIndex}
-                className={`flex items-start text-left transition-opacity duration-200 ${
-                  i === activeIndex ? "opacity-100" : "opacity-20 hover:opacity-60"
+                className={`group text-left transition-opacity duration-300 ${
+                  i === activeIndex ? "opacity-100" : "opacity-50 hover:opacity-100"
                 }`}
               >
-                <span className="w-[clamp(60px,10vw,153px)] shrink-0 font-chivo text-[12px] tracking-[0.24px]">
-                  {s.n}
-                </span>
-                <span className="font-helvetica text-[clamp(32px,4vw,54px)] font-medium leading-[0.95] tracking-[-0.03em]">
-                  {s.name}
+                <span className="flex items-baseline transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[clamp(8px,0.8vw,16px)] font-helvetica text-[clamp(32px,4vw,54px)] font-medium uppercase leading-[0.95] tracking-[-0.03em]">
+                  <span className="w-[clamp(80px,8vw,154px)] shrink-0">
+                    ({s.n})
+                  </span>
+                  <span>{s.name}</span>
                 </span>
               </button>
             </li>
