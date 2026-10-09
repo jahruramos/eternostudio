@@ -35,7 +35,7 @@ const faqs: Faq[] = [
   },
   {
     q: "¿Cómo se realizan los pagos?",
-    a: "Puedes pagar en dos cuotas: 50% al iniciar el proyecto y 50% en la entrega final. Si prefieres pagar al contado, obtienes un 20% de descuento sobre el precio del paquete elegido.",
+    a: "Puedes pagar en dos cuotas: 50% al iniciar el proyecto y 50% en la entrega final. Si prefieres pagar al contado, obtienes un 15% de descuento sobre el precio del paquete elegido.",
   },
 ];
 

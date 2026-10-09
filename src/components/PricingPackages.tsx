@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 // Paying up front takes this much off the installment price
-const UPFRONT_DISCOUNT = 0.2;
+const UPFRONT_DISCOUNT = 0.15;
 const WHATSAPP_NUMBER = "51902064575";
 
 // Prefilled chat so we know which package and payment mode the lead came from
@@ -41,7 +41,7 @@ const packages: Package[] = [
       "Sistema visual",
       "Guía de Estilo",
     ],
-    price: 1800,
+    price: 1900,
   },
   {
     name: "Branding",
@@ -58,7 +58,7 @@ const packages: Package[] = [
       "Concepto estratégico",
       "Manual de Marca",
     ],
-    price: 2800,
+    price: 3000,
     featured: true,
   },
   {
