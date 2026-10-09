@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { projects, projectImages } from "@/lib/schema";
-import { eq, asc } from "drizzle-orm";
+import { projectImages } from "@/lib/schema";
+import { eq, asc, and, inArray } from "drizzle-orm";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
+import { del } from "@vercel/blob";
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+const MAX_FILE_SIZE = 60 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,6 +49,77 @@ export async function GET(
     console.error("Error fetching images:", error);
     return NextResponse.json(
       { error: "Failed to fetch images" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const projectId = parseInt(id);
+
+    if (Number.isNaN(projectId)) {
+      return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
+    }
+
+    const body = await request.json();
+    const { ids } = body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return NextResponse.json(
+        { error: "ids array is required" },
+        { status: 400 }
+      );
+    }
+
+    const imageIds = ids
+      .map((value) => Number(value))
+      .filter((value) => Number.isInteger(value));
+
+    if (imageIds.length === 0) {
+      return NextResponse.json(
+        { error: "No valid image ids provided" },
+        { status: 400 }
+      );
+    }
+
+    const images = await db
+      .select()
+      .from(projectImages)
+      .where(
+        and(
+          eq(projectImages.projectId, projectId),
+          inArray(projectImages.id, imageIds)
+        )
+      );
+
+    for (const image of images) {
+      if (!image.src.startsWith("http")) continue;
+      try {
+        await del(image.src);
+      } catch (fileError) {
+        console.error(`Failed to delete blob: ${image.src}`, fileError);
+      }
+    }
+
+    await db
+      .delete(projectImages)
+      .where(
+        and(
+          eq(projectImages.projectId, projectId),
+          inArray(projectImages.id, imageIds)
+        )
+      );
+
+    return NextResponse.json({ deleted: images.length });
+  } catch (error) {
+    console.error("Error deleting images:", error);
+    return NextResponse.json(
+      { error: "Failed to delete images" },
       { status: 500 }
     );
   }
