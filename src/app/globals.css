@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --negro: #141414;
+  --negro: #0c0c0c;
   --cream: #fffdf1;
 }
 
@@ -9,6 +9,9 @@
   --color-negro: var(--negro);
   --color-cream: var(--cream);
   --font-sans: var(--font-pp-neue), ui-sans-serif, system-ui, sans-serif;
+  /* Adobe Typekit (ghq8xbc) — project fonts going forward */
+  --font-helvetica: "helvetica-neue-lt-pro", ui-sans-serif, system-ui, sans-serif;
+  --font-chivo: "chivo-mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 body {

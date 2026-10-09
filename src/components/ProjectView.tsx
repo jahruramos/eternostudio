@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import GallerySection from "@/components/GallerySection";
 
-const PAD = "clamp(20px, 6.25vw, 120px)";
+const PAD = "clamp(20px, 6.25vw, 50px)";
 
 const socials = [
   { label: "Instagram", href: "https://www.instagram.com/eterno.std/" },

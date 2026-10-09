@@ -1,10 +1,5 @@
 import Navbar from "@/components/Navbar";
-import MarqueeStrip from "@/components/MarqueeStrip";
-import { db } from "@/lib/db";
-import { projects } from "@/lib/schema";
-import { eq, asc } from "drizzle-orm";
-
-export const dynamic = "force-dynamic";
+import ServicesSection from "@/components/ServicesSection";
 
 const socials = [
   { label: "Instagram", href: "https://www.instagram.com/eterno.std/" },
@@ -12,63 +7,78 @@ const socials = [
   { label: "TikTok", href: "https://tiktok.com" },
 ];
 
-const PAD = "clamp(20px, 6.25vw, 120px)";
+const PAD = "clamp(20px, 6.25vw, 50px)";
 
-async function getThumbs() {
-  const publishedProjects = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.status, "published"))
-    .orderBy(asc(projects.sortOrder));
-
-  return publishedProjects.map((project) => ({
-    src: project.thumbnail || "/images/thumb-vitalis.png",
-    alt: `${project.title} branding`,
-    href: `/work/${project.slug}`,
-  }));
-}
-
-export default async function Home() {
-  const thumbs = await getThumbs();
-
+export default function Home() {
   return (
     <div className="flex min-h-screen flex-col overflow-clip">
       {/* Nav */}
       <Navbar pad={PAD} />
 
-      {/* Hero wordmark */}
-      <main className="flex flex-1 items-end" style={{ paddingInline: PAD }}>
+      {/* Hero — wordmark with animated emblem behind + tagline */}
+      <main className="flex flex-1 flex-col items-center justify-center pt-[215px]" style={{ paddingInline: PAD }}>
         <div
-          className="animate-logo relative w-full"
-          style={{ aspectRatio: "1680 / 212.42" }}
+          className="animate-logo relative mx-auto flex w-full max-w-[1400px] items-center justify-center"
           aria-label="Eterno Studio"
           role="img"
         >
-          {/* eslint-disable @next/next/no-img-element */}
-          <img
-            src="/images/wordmark-eterno.svg"
-            alt=""
-            className="absolute"
-            style={{ left: "0%", top: "1.62%", width: "44.17%", height: "98.38%" }}
-          />
-          <img
-            src="/images/wordmark-studio.svg"
-            alt=""
-            className="absolute"
-            style={{ left: "48.59%", top: "0%", width: "44.96%", height: "101.66%" }}
-          />
-          <img
-            src="/images/wordmark-tm.svg"
-            alt=""
-            className="absolute"
-            style={{ left: "95%", top: "27.21%", width: "5%", height: "18.98%" }}
-          />
-          {/* eslint-enable @next/next/no-img-element */}
+            {/* eslint-disable @next/next/no-img-element */}
+            {/* Animated emblem — sets the stage height, sits behind the wordmark */}
+            <div
+              className="pointer-events-none w-[37.857%] overflow-hidden rounded-[3px]"
+              style={{ aspectRatio: "1 / 1" }}
+              aria-hidden
+            >
+              <img
+                src="/images/hero-emblem.gif"
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            </div>
+            {/* Wordmark — centered over the emblem, spans full width */}
+            <img
+              src="/images/hero-wordmark.svg"
+              alt="Eterno Studio™"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-full -translate-x-1/2 -translate-y-1/2"
+            />
+            {/* eslint-enable @next/next/no-img-element */}
         </div>
+
+        {/* Tagline */}
+        <p
+          className="animate-fade-up mt-[70px] pb-[clamp(8px,2vh,24px)] text-center font-chivo text-[12px] uppercase leading-[20px] tracking-[0.24px]"
+          style={{ animationDelay: "0.8s" }}
+        >
+          Creative Studio &amp;
+          <br />
+          Strategic Design © 2026
+        </p>
       </main>
 
-      {/* Thumbnail strip — auto-scroll + manual scroll on hover */}
-      <MarqueeStrip thumbs={thumbs} />
+      {/* About */}
+      <section
+        id="about"
+        className="flex flex-col items-center pb-[clamp(120px,18vh,240px)] pt-[290px] text-center"
+        style={{ paddingInline: PAD }}
+      >
+        <p className="font-chivo text-[12px] uppercase tracking-[0.24px] underline underline-offset-2">
+          About
+        </p>
+        <p className="mt-[clamp(40px,5vw,60px)] max-w-[1206px] font-helvetica text-[clamp(24px,3.6vw,48px)] leading-[1.08] tracking-[-0.03em]">
+          Creemos que una marca es{" "}
+          <span className="underline underline-offset-[6px]">
+            mucho más que un logo.
+          </span>{" "}
+          Es una idea, un propósito y una promesa. Creemos que el buen diseño no
+          solo debe verse bien, sino tener{" "}
+          <span className="underline underline-offset-[6px]">
+            algo que decir.
+          </span>
+        </p>
+      </section>
+
+      {/* Services */}
+      <ServicesSection pad={PAD} />
 
       {/* Footer */}
       <footer

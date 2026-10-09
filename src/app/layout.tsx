@@ -28,6 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${ppNeueMontreal.variable} h-full`}>
+      <head>
+        {/* Adobe Typekit — helvetica-neue-lt-pro (sans) + chivo-mono */}
+        <link rel="stylesheet" href="https://use.typekit.net/ghq8xbc.css" />
+      </head>
       <body className="min-h-full bg-negro font-sans text-cream antialiased">
         <CustomCursor />
         {children}

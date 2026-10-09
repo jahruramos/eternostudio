@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Work", href: "#" },
-  { label: "About", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Home", href: "/", match: (p: string) => p === "/" },
+  { label: "Work", href: "#", match: (p: string) => p.startsWith("/work") },
+  { label: "About", href: "#", match: () => false },
+  { label: "Services", href: "#", match: () => false },
 ];
 
 export default function Navbar({
@@ -19,31 +20,43 @@ export default function Navbar({
   hidden?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header
-      className={`animate-fade-in z-50 flex items-center justify-between gap-4 py-[clamp(28px,5vh,60px)] transition-transform duration-300 ${
+      className={`animate-fade-in z-50 flex items-center justify-between gap-4 pb-[clamp(28px,5vh,60px)] pt-[clamp(18px,calc(5vh-10px),50px)] font-chivo text-[12px] uppercase tracking-[0.24px] transition-transform duration-300 ${
         fixed ? "relative lg:fixed lg:inset-x-0 lg:top-0 lg:bg-negro" : "relative"
       } ${hidden ? "lg:-translate-y-full" : "lg:translate-y-0"}`}
       style={{ paddingInline: pad, animationDelay: "0.3s" }}
     >
       {/* Desktop links */}
-      <nav className="hidden items-center gap-[clamp(14px,2vw,34px)] text-[12px] font-medium uppercase tracking-[0.25px] md:flex">
-        {navLinks.map((link) => (
-          <a key={link.label} href={link.href} className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-cream after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100">
-            {link.label}
-          </a>
-        ))}
+      <nav className="hidden items-center gap-[30px] md:flex">
+        {navLinks.map((link) => {
+          const active = link.match(pathname);
+          return (
+            <a
+              key={link.label}
+              href={link.href}
+              className={`transition-opacity duration-200 ${
+                active
+                  ? "underline underline-offset-2 opacity-100"
+                  : "opacity-50 hover:opacity-100"
+              }`}
+            >
+              {link.label}
+            </a>
+          );
+        })}
       </nav>
       <a
         href="#"
-        className="hidden whitespace-nowrap text-[12px] font-medium uppercase tracking-[0.25px] relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-cream after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 md:block"
+        className="hidden whitespace-nowrap underline underline-offset-2 opacity-100 transition-opacity duration-200 hover:opacity-70 md:block"
       >
         Start a project
       </a>
 
       {/* Mobile: brand + hamburger */}
-      <span className="text-sm font-medium uppercase tracking-[0.25px] md:hidden">
+      <span className="font-chivo text-sm uppercase tracking-[0.24px] md:hidden">
         Eterno Studio™
       </span>
       <button
@@ -81,7 +94,9 @@ export default function Navbar({
               key={link.label}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="text-3xl font-medium uppercase tracking-[0.25px]"
+              className={`font-chivo text-3xl uppercase tracking-[0.24px] ${
+                link.match(pathname) ? "underline underline-offset-4" : ""
+              }`}
             >
               {link.label}
             </a>
@@ -89,7 +104,7 @@ export default function Navbar({
           <a
             href="#"
             onClick={() => setOpen(false)}
-            className="mt-4 text-3xl font-medium uppercase tracking-[0.25px] opacity-60"
+            className="mt-4 font-chivo text-3xl uppercase tracking-[0.24px] underline underline-offset-4 opacity-70"
           >
             Start a project
           </a>
