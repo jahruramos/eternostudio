@@ -24,10 +24,10 @@ export default function Navbar({
 
   return (
     <header
-      className={`animate-fade-in z-50 flex items-center justify-between gap-4 pb-[clamp(28px,5vh,60px)] pt-[clamp(18px,calc(5vh-10px),50px)] font-chivo text-[12px] uppercase tracking-[0.24px] transition-transform duration-300 ${
+      className={`z-50 flex items-center justify-between gap-4 pb-[clamp(28px,5vh,60px)] pt-[clamp(18px,calc(5vh-10px),50px)] font-chivo text-[12px] uppercase tracking-[0.24px] transition-transform duration-300 ${
         fixed ? "relative lg:fixed lg:inset-x-0 lg:top-0 lg:bg-negro" : "relative"
       } ${hidden ? "lg:-translate-y-full" : "lg:translate-y-0"}`}
-      style={{ paddingInline: pad, animationDelay: "0.3s" }}
+      style={{ paddingInline: pad }}
     >
       {/* Desktop links */}
       <nav className="hidden items-center gap-[30px] md:flex">

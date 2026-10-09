@@ -16,9 +16,9 @@ export default function Home() {
       <Navbar pad={PAD} />
 
       {/* Hero — wordmark with animated emblem behind + tagline */}
-      <main className="flex flex-1 flex-col items-center justify-center pt-[215px]" style={{ paddingInline: PAD }}>
+      <main className="flex flex-1 flex-col items-center justify-center pt-[120px]" style={{ paddingInline: PAD }}>
         <div
-          className="animate-logo relative mx-auto flex w-full max-w-[1400px] items-center justify-center"
+          className="relative mx-auto flex w-full max-w-[1400px] items-center justify-center"
           aria-label="Eterno Studio"
           role="img"
         >
@@ -45,10 +45,7 @@ export default function Home() {
         </div>
 
         {/* Tagline */}
-        <p
-          className="animate-fade-up mt-[70px] pb-[clamp(8px,2vh,24px)] text-center font-chivo text-[12px] uppercase leading-[20px] tracking-[0.24px]"
-          style={{ animationDelay: "0.8s" }}
-        >
+        <p className="mt-[140px] text-center font-chivo text-[12px] uppercase leading-[20px] tracking-[0.24px]">
           Creative Studio &amp;
           <br />
           Strategic Design © 2026
@@ -82,8 +79,8 @@ export default function Home() {
 
       {/* Footer */}
       <footer
-        className="animate-fade-up flex flex-col gap-4 pb-[clamp(24px,5vh,56px)] pt-[clamp(28px,5vh,60px)] text-[12px] sm:flex-row sm:items-end sm:justify-between"
-        style={{ paddingInline: PAD, animationDelay: "1.1s" }}
+        className="flex flex-col gap-4 pb-[clamp(24px,5vh,56px)] pt-[clamp(28px,5vh,60px)] text-[12px] sm:flex-row sm:items-end sm:justify-between"
+        style={{ paddingInline: PAD }}
       >
         <p className="tracking-[0.42px]">
           ETERNO STUDIO©2026&nbsp;&nbsp;Creative Studio &amp; Strategic Design

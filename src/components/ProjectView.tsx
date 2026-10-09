@@ -47,10 +47,7 @@ export default function ProjectView({ project }: { project: Project }) {
         className="flex-1"
         style={{ paddingInline: PAD }}
       >
-        <div
-          className="animate-fade-up grid gap-x-16 gap-y-12 pt-[clamp(60px,9vw,150px)] lg:grid-cols-[1fr_minmax(0,1000px)] lg:pt-[clamp(110px,14vw,220px)]"
-          style={{ animationDelay: "0.5s" }}
-        >
+        <div className="grid gap-x-16 gap-y-12 pt-[clamp(60px,9vw,150px)] lg:grid-cols-[1fr_minmax(0,1000px)] lg:pt-[clamp(110px,14vw,220px)]">
           {/* Info column */}
           <div className="flex flex-col gap-16 bg-negro lg:sticky lg:top-[clamp(110px,14vw,220px)] lg:self-start lg:z-10">
             <div>
@@ -89,8 +86,8 @@ export default function ProjectView({ project }: { project: Project }) {
       </main>
 
       <footer
-        className="animate-fade-up flex flex-col gap-4 pb-[clamp(24px,5vh,56px)] pt-[clamp(28px,5vh,60px)] text-[12px] sm:flex-row sm:items-end sm:justify-between"
-        style={{ paddingInline: PAD, animationDelay: "0.8s" }}
+        className="flex flex-col gap-4 pb-[clamp(24px,5vh,56px)] pt-[clamp(28px,5vh,60px)] text-[12px] sm:flex-row sm:items-end sm:justify-between"
+        style={{ paddingInline: PAD }}
       >
         <p className="tracking-[0.42px]">
           ETERNO STUDIO©2026&nbsp;&nbsp;Creative Studio &amp; Strategic Design
