@@ -13,7 +13,7 @@ const socials = [
   { label: "TikTok", href: "https://tiktok.com" },
 ];
 
-const PAD = "clamp(20px, 6.25vw, 50px)";
+const PAD = "clamp(20px, 6.25vw, 40px)";
 
 async function getWork() {
   const publishedProjects = await db
