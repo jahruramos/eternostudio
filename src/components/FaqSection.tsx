@@ -2,21 +2,41 @@
 
 import { useState } from "react";
 
-type Faq = { q: string; a?: string };
+type Faq = { q: string; a: string };
 
 const faqs: Faq[] = [
   {
     q: "¿Qué incluye un proyecto de branding?",
     a: "Depende del paquete elegido, pero nuestros proyectos pueden incluir estrategia de marca, investigación, posicionamiento, identidad visual, dirección creativa, sistema gráfico y manual de marca.",
   },
-  // Pending answers — question only for now
-  { q: "¿Cuál es la diferencia entre Branding e Identidad Visual?" },
-  { q: "¿Cuánto dura un proyecto?" },
-  { q: "¿Puedo contratar solo la identidad visual?" },
-  { q: "¿Trabajan con marcas que ya existen?" },
-  { q: "¿Cómo es el proceso de trabajo?" },
-  { q: "¿Cuántas propuestas de logo presentan?" },
-  { q: "¿Cómo se realizan los pagos?" },
+  {
+    q: "¿Cuál es la diferencia entre Branding e Identidad Visual?",
+    a: "El Branding define la estrategia: propósito, posicionamiento, personalidad y tono de la marca. La Identidad Visual traduce esa estrategia en logotipo, colores, tipografía y sistema gráfico.",
+  },
+  {
+    q: "¿Cuánto dura un proyecto?",
+    a: "Depende del alcance. Un proyecto de Identidad toma aproximadamente 3 semanas y uno de Branding alrededor de 5. El Full Package se planifica a medida según los objetivos de cada marca.",
+  },
+  {
+    q: "¿Puedo contratar solo la identidad visual?",
+    a: "Sí. Nuestro paquete Identidad está pensado para marcas que ya tienen una estrategia clara y necesitan convertirla en un sistema visual distintivo, coherente y listo para usarse.",
+  },
+  {
+    q: "¿Trabajan con marcas que ya existen?",
+    a: "Sí. Trabajamos tanto con marcas nuevas como con marcas que buscan evolucionar. Partimos de una auditoría para entender qué funciona, qué no y hacia dónde debe crecer la marca.",
+  },
+  {
+    q: "¿Cómo es el proceso de trabajo?",
+    a: "Seguimos tres etapas: Descubrir, Decidir y Diseñar. Investigamos tu marca y su entorno, definimos juntos la dirección estratégica y luego desarrollamos la identidad hasta su entrega final.",
+  },
+  {
+    q: "¿Cuántas propuestas de logo presentan?",
+    a: "Presentamos dos rutas creativas fundamentadas en la estrategia. Elegimos una contigo y la refinamos en rondas de revisión hasta llegar a la versión final de tu identidad visual.",
+  },
+  {
+    q: "¿Cómo se realizan los pagos?",
+    a: "Puedes pagar en dos cuotas: 50% al iniciar el proyecto y 50% en la entrega final. Si prefieres pagar al contado, obtienes un 20% de descuento sobre el precio del paquete elegido.",
+  },
 ];
 
 const QUESTION =
@@ -48,14 +68,6 @@ export default function FaqSection({ pad }: { pad: string }) {
       {/* Questions */}
       <ul className="flex max-w-[755px] flex-col gap-[21px] lg:w-1/2">
         {faqs.map((f, i) => {
-          if (!f.a) {
-            return (
-              <li key={f.q} className={QUESTION}>
-                {f.q}
-              </li>
-            );
-          }
-
           const open = openIndex === i;
           const panelId = `faq-${i}`;
 

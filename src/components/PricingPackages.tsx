@@ -4,7 +4,14 @@ import { useState } from "react";
 
 // Paying up front takes this much off the installment price
 const UPFRONT_DISCOUNT = 0.2;
-const WHATSAPP_URL = "https://wa.me/51902064575";
+const WHATSAPP_NUMBER = "51902064575";
+
+// Prefilled chat so we know which package and payment mode the lead came from
+function whatsappHref(packageName: string, upfront: boolean) {
+  const payment = upfront ? "pago al contado" : "pago en cuotas";
+  const text = `Hola, me interesa el paquete ${packageName} (${payment}). ¿Podemos conversar?`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+}
 
 type Package = {
   name: string;
@@ -132,7 +139,7 @@ export default function PricingPackages({ pad }: { pad: string }) {
               : "Pago en dos cuotas.";
 
           const border = p.featured ? "border-cream" : "border-[#3a3a3a]";
-          const ctaHref = p.custom ? "/contact" : WHATSAPP_URL;
+          const ctaHref = p.custom ? "/contact" : whatsappHref(p.name, upfront);
           const ctaExternal = ctaHref.startsWith("http");
 
           return (
