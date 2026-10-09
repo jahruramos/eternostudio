@@ -46,6 +46,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     .orderBy(asc(projectImages.sortOrder));
 
   const projectData = {
+    title: project.title,
     overview: project.overview || "",
     client: project.client || "",
     location: project.location || "",
