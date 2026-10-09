@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import ProjectForm from "@/components/admin/ProjectForm";
 import ImageUploader from "@/components/admin/ImageUploader";
 
@@ -76,7 +77,15 @@ export default function EditProjectPage() {
     <div className="min-h-screen p-8">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold">Editar proyecto</h1>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/admin-eternostd"
+              className="text-sm text-cream/50 hover:text-cream transition-colors"
+            >
+              ← Volver
+            </Link>
+            <h1 className="text-2xl font-bold">Editar proyecto</h1>
+          </div>
           <a
             href={`/work/${project.slug}`}
             target="_blank"
