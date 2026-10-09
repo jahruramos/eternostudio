@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 const navLinks = [
   { label: "Home", href: "/", match: (p: string) => p === "/" },
   { label: "Work", href: "/work", match: (p: string) => p.startsWith("/work") },
-  { label: "About", href: "#", match: () => false },
   { label: "Services", href: "/services", match: (p: string) => p.startsWith("/services") },
+  { label: "Pricing", href: "/precios", match: (p: string) => p.startsWith("/precios") },
 ];
 
 export default function Navbar({
@@ -49,7 +49,7 @@ export default function Navbar({
         })}
       </nav>
       <a
-        href="#"
+        href="/contact"
         className="hidden whitespace-nowrap underline underline-offset-2 opacity-100 transition-opacity duration-200 hover:opacity-70 md:block"
       >
         Start a project
@@ -102,7 +102,7 @@ export default function Navbar({
             </a>
           ))}
           <a
-            href="#"
+            href="/contact"
             onClick={() => setOpen(false)}
             className="mt-4 font-chivo text-3xl uppercase tracking-[0.24px] underline underline-offset-4 opacity-70"
           >
