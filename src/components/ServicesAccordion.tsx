@@ -94,7 +94,7 @@ export default function ServicesAccordion({ pad }: { pad: string }) {
 
   return (
     <section
-      className="flex flex-col gap-[clamp(24px,2.35vw,45px)] pb-[118px] pt-[clamp(120px,11.8vw,226px)]"
+      className="flex flex-col gap-[calc(clamp(24px,2.35vw,45px)-20px)] pb-[118px] pt-[clamp(120px,11.8vw,226px)]"
       style={{ paddingInline: pad }}
     >
       {services.map((s, i) => {
