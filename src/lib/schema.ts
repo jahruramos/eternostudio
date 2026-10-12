@@ -8,7 +8,7 @@ export const projects = sqliteTable("projects", {
   location: text("location"),
   duration: text("duration"),
   services: text("services"),
-  overview: text("overview"), // JSON array of strings
+  overview: text("overview"), // texto plano; párrafos separados por "\n\n"
   thumbnail: text("thumbnail"), // path to thumbnail image
   status: text("status").default("draft").notNull(), // 'draft' | 'published'
   sortOrder: integer("sort_order").default(0).notNull(),
@@ -26,7 +26,4 @@ export const projectImages = sqliteTable("project_images", {
   sortOrder: integer("sort_order").default(0).notNull(),
 });
 
-export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
-export type ProjectImage = typeof projectImages.$inferSelect;
-export type NewProjectImage = typeof projectImages.$inferInsert;
